@@ -1,0 +1,6 @@
+*~
+.DS_Store
+.env
+
+mysql_volume/*
+!mysql_volume/.gitkeep
