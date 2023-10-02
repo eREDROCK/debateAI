@@ -1,7 +1,7 @@
 from django.urls import path, include
-from .views import StartStatementAPI
+from .views import RandomThemeAPI
 
 
 urlpatterns = [
-    path('start/', StartStatementAPI.as_view()),
+    path('randomtheme/', RandomThemeAPI.as_view()),
 ]
