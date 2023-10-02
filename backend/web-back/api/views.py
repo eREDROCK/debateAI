@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from django.http import  HttpResponse
-from django.http.response import JsonResponse
 from rest_framework.response import Response
 from utils import chatbot
 import random
@@ -22,5 +21,5 @@ class RandomThemeAPI(APIView):
                  "頭脳より運動神経のほうが必要である", "ディベートにおいてAIのほうが実力が上である", "やられたらやり返すべきである"]
     title=randomTitle[int(random.uniform(0,9))]
     
-    return HttpResponse(title)
+    return Response(title)
   
