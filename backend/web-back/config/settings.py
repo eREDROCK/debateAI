@@ -45,6 +45,7 @@ INSTALLED_APPS = [
 
     # Local
     'ai.apps.AiConfig',
+    'api.apps.ApiConfig',
 ]
 
 MIDDLEWARE = [
