@@ -22,15 +22,20 @@
       "static/chunks/main.js",
       "static/chunks/pages/_error.js"
     ],
-    "/debate": [
+    "/test": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/debate.js"
+      "static/chunks/pages/test.js"
     ],
-    "/top": [
+    "/test/app": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/top.js"
+      "static/chunks/pages/test/app.js"
+    ],
+    "/test/redrcok": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/test/redrcok.js"
     ]
   },
   "ampFirstPages": []
