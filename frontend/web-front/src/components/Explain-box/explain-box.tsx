@@ -38,7 +38,7 @@ const ExplainBox = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setCount((oldCount) => {
-        if (oldCount < 3) return oldCount + 1;
+        if (oldCount < 11) return oldCount + 1;
         return 0;
       });
     }, 1000);
@@ -49,8 +49,9 @@ const ExplainBox = () => {
     <BoxDiv>
       <li>プレイ方法</li>
       <CardDiv className="item">
-        <li>{InstructData[count].image}</li>
-        <li>{InstructData[count].instruction}</li>
+        <li>{InstructData[Math.floor(count / 3)].image}</li>
+        <li>{InstructData[Math.floor(count / 3)].instruction}</li>
+
         <li>{count}</li>
       </CardDiv>
     </BoxDiv>
