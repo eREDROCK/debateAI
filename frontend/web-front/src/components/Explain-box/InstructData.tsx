@@ -13,4 +13,8 @@ export const InstructData = [
     image: "3",
     instruction: "wa",
   },
+  {
+    image: "4",
+    instruction: "ka",
+  },
 ];
