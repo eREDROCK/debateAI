@@ -1,21 +1,39 @@
 import React from "react";
 import styled from "styled-components";
 
-const StyledHello = styled.h1`
-  color: red;
-  span {
-    color: blue;
+const BoxDiv = styled.div`
+  display: inline-block;
+  height: 100%;
+  width: auto;
+  margin-left: 240px;
+  margin-top: 70px;
+  padding: 10px 0px 0px 10px;
+  border: solid 1px #999999;
+
+  li {
+    /* display: inline-block; */
+    list-style: none;
+    padding: 0px 0px 0px 0px;
+  }
+  .container {
+    width: 150px;
+    margin: 5px;
+    border: solid 1px #999999;
   }
 
-  @media (min-width: 768px) {
-    span {
-      display: block;
-    }
+  .item {
+    width: 100px;
+    margin: 5px;
+    border: solid 1px #999999;
   }
 `;
 
-const explainBox = () => {
-  return <div>top</div>;
+const ExplainBox = () => {
+  return (
+    <BoxDiv>
+      <li>プレイ方法</li>
+    </BoxDiv>
+  );
 };
 
-export default explainBox;
+export default ExplainBox;
