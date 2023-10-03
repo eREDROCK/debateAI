@@ -19,7 +19,6 @@ const App = () => {
     <div>
       {/* ↓「span」を追加 */}
       <StyledHello>debate</StyledHello>
-      debate
     </div>
   );
 };
