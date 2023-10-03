@@ -28,7 +28,7 @@ class DebateAPI(APIView):
     postedJsonBody=json.loads(request.body)
     title=postedJsonBody["title"]
     roleflag=postedJsonBody["flag"]
-    if(roleflag=="true"): role="反対派"
+    if(roleflag=="true"): role="否定派"
     else: role="賛成派"
     jsonmessage=postedJsonBody["message"]
     aiResponse=Ask_ChatGPT(jsonmessage,title,role)
