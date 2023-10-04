@@ -1,9 +1,10 @@
+import Player from "../../components/Player-AI-box/Player-AI-box";
 import Title from "../../components/Title-box/Title-box"
 
 const App = () => {
   return (
     <div>
-    <Title/>
+    <Player role={0} />
     </div>
   );
 };

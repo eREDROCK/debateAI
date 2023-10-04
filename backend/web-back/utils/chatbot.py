@@ -85,3 +85,4 @@ def Judge_debate(message):
 
 # # 出力
 # print(res)
+
