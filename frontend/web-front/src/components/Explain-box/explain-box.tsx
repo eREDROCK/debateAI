@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { InstructData } from "./InstructData";
 
@@ -32,27 +32,27 @@ const CardDiv = styled.div`
   margin-bottom: 5px; /* 下の余白 */
 `;
 
-//タイマー処理
-setInterval(() => {
-  //カウントの初期値
-  let counter = 0;
-
-  //カウントアップ
-  counter++;
-  var setItem = 0;
-
-  if (counter % 3 === setItem) {
-  }
-  <li>{InstructData[setItem].instruction}</li>;
-}, 1000);
-
 const ExplainBox = () => {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCount((oldCount) => {
+        if (oldCount < 11) return oldCount + 1;
+        return 0;
+      });
+    }, 1000);
+    return () => clearInterval(interval);
+  });
+
   return (
     <BoxDiv>
       <li>プレイ方法</li>
       <CardDiv className="item">
-        <li>{InstructData[0].instruction}</li>
-        <li>{InstructData[1].instruction}</li>
+        <li>{InstructData[Math.floor(count / 3)].image}</li>
+        <li>{InstructData[Math.floor(count / 3)].instruction}</li>
+
+        <li>{count}</li>
       </CardDiv>
     </BoxDiv>
   );
