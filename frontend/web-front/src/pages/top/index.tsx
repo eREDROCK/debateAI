@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import UserNameBox from "../../components/Username-box/UserNameBox";
 
 const StyledHello = styled.h1`
   color: red;
@@ -15,7 +16,11 @@ const StyledHello = styled.h1`
 `;
 
 const App = () => {
-  return <div>top</div>;
+  return (
+    <div>
+      <UserNameBox />
+    </div>
+  );
 };
 
 export default App;
