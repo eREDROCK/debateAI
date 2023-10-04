@@ -16,7 +16,8 @@ const StyeledInput = styled.input`
   width: 78%;
   height: 50px;
   font-size: 20px;
-
+  border-radius: 20px;
+  background-color: ragba(255, 0, 255, 0.6);
 `
 const StyeledButton = styled.button`
   width: 160px;
