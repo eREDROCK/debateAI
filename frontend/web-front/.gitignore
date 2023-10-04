@@ -22,9 +22,6 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 74642ad7c8fb1301720903302bb6de388b34c63c
 # next.js build output
 .next
