@@ -3,6 +3,7 @@ from rest_framework.views import APIView
 from django.http import  HttpResponse
 from rest_framework.response import Response
 from utils.chatbot import Ask_ChatGPT
+from utils.chatbot import Judge_debate
 
 import random
 import json
@@ -37,6 +38,32 @@ class DebateAPI(APIView):
       "message": jsonmessage,
       "title": title,
       "flag": roleflag
+    }
+    jsonresponse=json.dumps(response, ensure_ascii=False)
+    return Response(jsonresponse)
+
+class JudgeAPI(APIView):
+  permission_classes = ()
+  authentication_classes = ()
+  def post(self,request):
+    postedJsonBody=json.loads(request.body)
+    messages=postedJsonBody["message"]
+    result=Judge_debate(messages)
+    lines = result.split('\n')
+    winner = None
+    comment = None
+    # 行ごとに処理
+    for line in lines:
+        # 行が「勝者:」で始まる場合、勝者を抽出
+        if line.startswith('勝者:'):
+            winner = line.split('勝者:')[1].strip()
+        # 行が「コメント:」で始まる場合、コメントを抽出
+        elif line.startswith('コメント:'):
+            comment = line.split('コメント:')[1].strip()
+    
+    response={
+       "winner": winner,
+       "comment": comment
     }
     jsonresponse=json.dumps(response, ensure_ascii=False)
     return Response(jsonresponse)

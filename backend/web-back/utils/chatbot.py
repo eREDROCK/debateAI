@@ -38,6 +38,38 @@ def Ask_ChatGPT(message,title,role):
     # 応答内容出力
     return response
 
+
+def Judge_debate(message):
+
+    messages = [{
+        "role":"system", "content":"あなたはディベートの判定をするスペシャリストです。userとassistantどちらの内容が論理的で相手の会話を論破していたか判定してください。また、どの論点が優れていたかコメントしてください。判定の結果は、「'勝者:[ここに記述]'、'コメント:[ここに記述]'」の[]の中に[]も含めて記述して回答してください。"
+    }]
+
+    content = ""
+    for mes in message:
+        content = content + mes["role"] + ": " + mes["content"]
+
+    messages = messages + [{"role":"user", "content":content}]
+
+    response = completion = openai.ChatCompletion.create(
+                 model    = "gpt-3.5-turbo",     # モデルを選択
+                 messages = messages,
+                 max_tokens  = 1024,             # 生成する文章の最大単語数
+                 n           = 1,                # いくつの返答を生成するか
+                 stop        = None,             # 指定した単語が出現した場合、文章生成を打ち切る
+                 temperature = 0.5,              # 出力する単語のランダム性（0から2の範囲） 0であれば毎回返答内容固定
+                )
+    
+    response = response["choices"][0]["message"]["content"]
+    # response = message + [{"role":"assistant", "content":response}]
+    
+    # 応答内容出力
+    return response
+
+
+
+
+
 # =============================================================
 # チャットボット実行
 # =============================================================
