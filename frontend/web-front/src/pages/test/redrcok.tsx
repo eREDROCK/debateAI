@@ -1,7 +1,15 @@
 import Player from "../../components/Player-AI-box/Player-AI-box";
+import Audience from "../../components/Audience/Audience";
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
+
+const  TestDiv=styled.div`
+ul{
+  display: flex;
+ }
+
+`
 
 const App = () => {
 
@@ -79,6 +87,7 @@ const App = () => {
   };
 
   return (
+    <TestDiv>
     <div>
       <input
         type="text"
@@ -97,10 +106,16 @@ const App = () => {
         <button type='submit'>送信</button>
       </form>
       <ul>
-        <li><Player role={0} isInputting={isInputting} isLoading={isLoading}/> </li>
         <li><Player role={1} isInputting={isInputting} isLoading={isLoading}/> </li>
+        <li><Player role={0} isInputting={isInputting} isLoading={isLoading}/> </li>
+      </ul>
+      <ul>
+        <li><Audience role={0} isInputting={isInputting} isLoading={isLoading}/></li>
+        <li><Audience role={1} isInputting={isInputting} isLoading={isLoading}/></li>
+        <li><Audience role={2} isInputting={isInputting} isLoading={isLoading}/></li>
       </ul>
     </div>
+    </TestDiv>
   );
 };
 
