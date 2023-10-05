@@ -51,7 +51,6 @@ const ExplainBox = () => {
       <CardDiv className="item">
         <li>{InstructData[Math.floor(count / 3)].image}</li>
         <li>{InstructData[Math.floor(count / 3)].instruction}</li>
-
         <li>{count}</li>
       </CardDiv>
     </BoxDiv>
