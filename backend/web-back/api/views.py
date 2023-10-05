@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
-from django.http import  HttpResponse
+from django.http import  HttpResponse, JsonResponse
 from rest_framework.response import Response
 from utils.chatbot import Ask_ChatGPT
 from utils.chatbot import Judge_debate
@@ -11,6 +11,7 @@ import json
 
 
 # Create your views here.
+# お題の自動生成
 class RandomThemeAPI(APIView):
   permission_classes = ()
   authentication_classes = ()
@@ -39,9 +40,10 @@ class DebateAPI(APIView):
       "title": title,
       "flag": roleflag
     }
-    jsonresponse=json.dumps(response, ensure_ascii=False)
-    return Response(jsonresponse)
 
+    return JsonResponse(response)
+
+# ディベート結果の勝者判定とコメント
 class JudgeAPI(APIView):
   permission_classes = ()
   authentication_classes = ()
@@ -65,5 +67,4 @@ class JudgeAPI(APIView):
        "winner": winner,
        "comment": comment
     }
-    jsonresponse=json.dumps(response, ensure_ascii=False)
-    return Response(jsonresponse)
+    return JsonResponse(response)
