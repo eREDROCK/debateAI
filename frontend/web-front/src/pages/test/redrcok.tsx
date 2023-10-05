@@ -1,9 +1,33 @@
-import Title from "../../components/Title-box/Title-box"
+import Player from "../../components/Player-AI-box/Player-AI-box";
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+
 
 const App = () => {
+
+  const [isInputting, setIsInputting] = useState(false);
+  // formの入力中に呼び出す関数
+  const handleInput = () => {
+    setIsInputting(true);
+  };
+  // formに入力も何もしていないときに呼び出す関数
+  const handleInputBlur = () => {
+    setIsInputting(false);
+  };
   return (
     <div>
-    <Title/>
+      <input
+        type="text"
+        placeholder="テキストを入力してください"
+        onFocus={handleInput}// formに入力中の時にhandleInputを呼び出す
+        onBlur={handleInputBlur}// formに入力も何もしていないときにhandleInputBlurを呼び出す
+      />
+      <button>botann</button>
+      <ul>
+        <li><Player role={0} isInputting={isInputting}/> </li>
+        <li><Player role={1} isInputting={isInputting}/> </li>
+      </ul>
+    <button>botann</button>
     </div>
   );
 };
