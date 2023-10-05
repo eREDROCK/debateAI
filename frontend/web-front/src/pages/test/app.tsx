@@ -6,7 +6,8 @@ export default (() => {
   return (
     <div>
       <ExplainBox />
-      <Cylinder></Cylinder>
+      <Cylinder />
+      <img src={`${process.env.PUBLIC_URL}/image/台座.png`} alt="" />
     </div>
   );
 }) as FC;
