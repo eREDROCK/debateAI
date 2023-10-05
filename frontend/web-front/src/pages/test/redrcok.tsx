@@ -1,6 +1,6 @@
 import Player from "../../components/Player-AI-box/Player-AI-box";
 import React, { useState, useEffect } from "react";
-
+import styled from "styled-components";
 
 
 const App = () => {
@@ -22,7 +22,11 @@ const App = () => {
         onFocus={handleInput}// formに入力中の時にhandleInputを呼び出す
         onBlur={handleInputBlur}// formに入力も何もしていないときにhandleInputBlurを呼び出す
       />
-    <Player role={0} isInputting={isInputting}/> 
+      <button>botann</button>
+      <ul>
+        <li><Player role={0} isInputting={isInputting}/> </li>
+        <li><Player role={1} isInputting={isInputting}/> </li>
+      </ul>
     <button>botann</button>
     </div>
   );

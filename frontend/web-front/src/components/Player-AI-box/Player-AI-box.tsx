@@ -1,18 +1,20 @@
 import React, {useEffect} from "react";
-import styled from "styled-components";
+import Image from "next/image";
 
 const  Player=({role, isInputting}: {role: number; isInputting: boolean })=>{
 
   if (role === 0) {
     return(
       <div>
-         {isInputting ? (<div>応答中です</div>) : (<div>考え中です</div>)}
+         {isInputting ? (<Image src="/image/HumanSpeak.png" layout="responsive"  alt="none" width={1} height={1}/>) 
+         : (<Image src="/image/HumanThink.png" layout="responsive" alt="none" width={1} height={1}/>)}
       </div>
     );
   } else {
     return(
       <div>
-        AIです
+        {isInputting ? (<Image src="/image/AIThink.png" layout="responsive" sizes="5%" alt="none" width={10} height={10}/>) 
+         : (<Image src="/image/AISpeak.png" layout="responsive" sizes="5%" alt="none" width={10} height={10}/>)}
       </div>
     );
   }
