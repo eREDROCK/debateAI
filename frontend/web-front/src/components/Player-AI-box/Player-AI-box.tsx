@@ -1,19 +1,19 @@
 import React, {useEffect} from "react";
 import Image from "next/image";
 
-const  Player=({role, isInputting}: {role: number; isInputting: boolean })=>{
+const  Player=({role, isInputting,isLoading}: {role: number; isInputting: boolean; isLoading: boolean})=>{
 
-  if (role === 0) {
+  if (role === 0) {//ユーザー画像の処理
     return(
       <div>
          {isInputting ? (<Image src="/image/HumanSpeak.png" layout="responsive"  alt="none" width={1} height={1}/>) 
          : (<Image src="/image/HumanThink.png" layout="responsive" alt="none" width={1} height={1}/>)}
       </div>
     );
-  } else {
+  } else {//AI画像の処理
     return(
       <div>
-        {isInputting ? (<Image src="/image/AIThink.png" layout="responsive" sizes="5%" alt="none" width={10} height={10}/>) 
+        {isInputting || isLoading ? (<Image src="/image/AIThink.png" layout="responsive" sizes="5%" alt="none" width={10} height={10}/>) 
          : (<Image src="/image/AISpeak.png" layout="responsive" sizes="5%" alt="none" width={10} height={10}/>)}
       </div>
     );
@@ -26,6 +26,7 @@ export default Player;
 
 // ゲーム画面に合体するときは以下の部分を入れてください
 // const [isInputting, setIsInputting] = useState(false);
+// const [isLoading, setIsLoading] =useState(false);
 //   // formの入力中に呼び出す関数
 //   const handleInput = () => {
 //     setIsInputting(true);
@@ -49,3 +50,5 @@ export default Player;
 //     <button>botann</button>
 //     </div>
 //   );
+
+//  setIsLoading(true);をPOSTした直後にいれ，responseが帰ってきたらsetIsLoading(false)を入れてください．;

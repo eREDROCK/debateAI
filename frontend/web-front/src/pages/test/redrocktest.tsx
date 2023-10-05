@@ -1,11 +1,22 @@
-import Player from "../../components/Player-AI-box/Player-AI-box";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
 
-const App = () => {
+const StyledHello = styled.div`
+  color: red;
+  span {
+    color: blue;
+  }
 
-  const initialValues =  {
+  @media (min-width: 768px) {
+    span {
+      display: block;
+    }
+  }
+`;
+
+const App = () => {
+  const initialValues = {
     message: [{ role: "user", content: "" }],
     title: "たけのこ派",
     flag: true,
@@ -14,28 +25,10 @@ const App = () => {
   // APIにリクエストした回数をカウントする
   const [count, setCount] = useState(0);
   const [formValues, setFromValues] = useState(initialValues);
+  const [messageValues, setMessageFromValues] = useState(initialValues);
 
-  const [isInputting, setIsInputting] = useState(false);
-  const [isLoading, setIsLoading] =useState(false);
-
-  // formの入力中に呼び出す関数
-  const handleInput = () => {
-    setIsInputting(true);
-  };
-  // formに入力も何もしていないときに呼び出す関数
-  const handleInputBlur = () => {
-    setIsInputting(false);
-  };
-
-  const handleChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // console.log(e.target);
-    const { name, value } = e.target;
-    setFromValues({ ...formValues, [name]: value });
-    console.log(formValues);
-  };
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsLoading(true);
     await axios
       .post(
         "http://localhost:8080/api/debate/",
@@ -68,10 +61,34 @@ const App = () => {
       )
       .then((response) => {
         console.log("body:", response.status);
-        setIsLoading(false);
-        if (response.status === 200) {
-          setCount(count + 1);
-        }
+        // setCount(count + 1);
+        console.log(response.data);
+      })
+      .catch((error) => {
+        // console.log("error.response.data");
+      });
+  };
+
+  const handleChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // console.log(e.target);
+    const { name, value } = e.target;
+    setFromValues({
+      ...formValues,
+      [name]: [
+        {
+          role: "user",
+          content: value,
+        },
+      ],
+    });
+    console.log(formValues);
+  };
+
+  const handleGameStart = async (e: React.FormEvent<HTMLFormElement>) => {
+    await axios
+      .get("http://localhost:8080/api/", {})
+      .then((response) => {
+        console.log("body:", response.status);
       })
       .catch((error) => {
         console.log(error.response.data);
@@ -80,13 +97,7 @@ const App = () => {
 
   return (
     <div>
-      <input
-        type="text"
-        placeholder="テキストを入力してください"
-        onFocus={handleInput}// formに入力中の時にhandleInputを呼び出す
-        onBlur={handleInputBlur}// formに入力も何もしていないときにhandleInputBlurを呼び出す
-      />
-      <button>botann</button>
+      <StyledHello>debate</StyledHello>
       <form onSubmit={(e) => handleSubmit(e)}>
         <input
           type="text"
@@ -94,12 +105,10 @@ const App = () => {
           name="message"
           onChange={(e) => handleChanged(e)}
         />
-        <button type='submit'>送信</button>
+        <button>送信</button>
       </form>
-      <ul>
-        <li><Player role={0} isInputting={isInputting} isLoading={isLoading}/> </li>
-        <li><Player role={1} isInputting={isInputting} isLoading={isLoading}/> </li>
-      </ul>
+
+      {formValues.message[0].content}
     </div>
   );
 };
