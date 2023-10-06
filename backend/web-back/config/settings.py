@@ -137,6 +137,12 @@ REST_FRAMEWORK = {
     ]
 }
 
+CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOW_ALL_ORIGINS = True
+
 CORS_ORIGIN_WHITELIST = (
     'http://localhost',
+    'http://localhost:3000',
+    'http://localhost:3000/debate',
 )
