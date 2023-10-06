@@ -6,7 +6,7 @@ const  Player=({role, isInputting,isLoading}: {role: number; isInputting: boolea
   if (role === 0) {//ユーザー画像の処理
     return(
       <div>
-         {isInputting ? (<Image src="/image/HumanSpeak.png" layout="responsive"  alt="none" width={1} height={1}/>) 
+         {isInputting ? (<Image src="/image/HumanSpeak.png" layout="responsive"  sizes="5%" alt="none" width={10} height={10}/>) 
          : (<Image src="/image/HumanThink.png" layout="responsive" alt="none" width={1} height={1}/>)}
       </div>
     );

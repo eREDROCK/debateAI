@@ -3,6 +3,7 @@ import Audience from "../../components/Audience/Audience";
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
+import { useRef } from "react";
 
 const  TestDiv=styled.div`
 ul{
@@ -25,6 +26,8 @@ const App = () => {
 
   const [isInputting, setIsInputting] = useState(false);
   const [isLoading, setIsLoading] =useState(false);
+
+  const formRef = useRef(null);
 
   // formの入力中に呼び出す関数
   const handleInput = () => {
@@ -76,6 +79,7 @@ const App = () => {
       )
       .then((response) => {
         console.log("body:", response.status);
+        formRef.current.reset();
         setIsLoading(false);
         if (response.status === 200) {
           setCount(count + 1);
@@ -96,7 +100,7 @@ const App = () => {
         onBlur={handleInputBlur}// formに入力も何もしていないときにhandleInputBlurを呼び出す
       />
       <button>botann</button>
-      <form onSubmit={(e) => handleSubmit(e)}>
+      <form onSubmit={(e) => handleSubmit(e)} ref={formRef}>
         <input
           type="text"
           placeholder="入力"
