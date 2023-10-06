@@ -38,14 +38,16 @@ const BoxDiv = styled.div`
       transform: translateY(3px);
     }    
   }
+
+  .InputName {
+    width: 78%;
+    height: 50px;
+    font-size: 20px;
+    border-radius: 20px;
+    background-color: rgba(250, 250, 250, 0.6);
+  }
 ` 
-const StyeledInput = styled.input`
-  width: 78%;
-  height: 50px;
-  font-size: 20px;
-  border-radius: 20px;
-  background-color: rgba(250, 250, 250, 0.6);
-`
+
 const Triangle = styled.div`
   width: 20px;
   height: 20px;
@@ -76,7 +78,7 @@ const UserNameBox = () => {
   return (
     <BoxDiv >
       <div className='LocationDiv'>
-        <StyeledInput 
+        <input className='InputName' 
           type="text" 
           value={userName} 
           onChange={handleInputChange}
