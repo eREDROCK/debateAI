@@ -167,6 +167,7 @@ const App = () => {
         ...formValues,
         title: formValues["title"],
       });
+      setCheckStartResult(true);
     }
     console.log("formValues", formValues);
     formRef.current.reset();
