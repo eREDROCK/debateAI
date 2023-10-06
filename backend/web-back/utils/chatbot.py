@@ -70,7 +70,8 @@ def DefaetedJudge(message):
     messages = [{
         "role":"system", "content":"あなたはディベートの判定をするスペシャリストです。userの内容がassistantの内容を論破しているならTrueを論破できていないならFalseという風に判定してください。判定の結果は「[ここにTrueまたはFalseを記述]」のように出力し，中身を記述した[]のみ出力してください。"
     }]
-    content = [message[-2],message[-1]] #直前のAIとユーザーの会話を取り出す
+    if(len(message)<=1): content = [message[0]] #直前のAIとユーザーの会話を取り出す}
+    else: content = [message[-2],message[-1]] #直前のAIとユーザーの会話を取り出す
     messages=messages+content
     response = completion = openai.ChatCompletion.create(
                  model    = "gpt-3.5-turbo",     # モデルを選択
