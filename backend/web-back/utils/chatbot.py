@@ -66,6 +66,26 @@ def Judge_debate(message):
     # 応答内容出力
     return response
 
+def DefaetedJudge(message):
+    messages = [{
+        "role":"system", "content":"あなたはディベートの判定をするスペシャリストです。userの内容がassistantの内容を論破しているならTrueを論破できていないならFalseという風に判定してください。判定の結果は「[ここにTrueまたはFalseを記述]」のように出力し，中身を記述した[]のみ出力してください。"
+    }]
+    content = [message[-2],message[-1]] #直前のAIとユーザーの会話を取り出す
+    messages=messages+content
+    response = completion = openai.ChatCompletion.create(
+                 model    = "gpt-3.5-turbo",     # モデルを選択
+                 messages = messages,
+                 max_tokens  = 1024,             # 生成する文章の最大単語数
+                 n           = 1,                # いくつの返答を生成するか
+                 stop        = None,             # 指定した単語が出現した場合、文章生成を打ち切る
+                 temperature = 0.5,              # 出力する単語のランダム性（0から2の範囲） 0であれば毎回返答内容固定
+                )
+    
+    response = response["choices"][0]["message"]["content"]
+    
+    return response
+
+
 
 
 
@@ -85,3 +105,4 @@ def Judge_debate(message):
 
 # # 出力
 # print(res)
+
