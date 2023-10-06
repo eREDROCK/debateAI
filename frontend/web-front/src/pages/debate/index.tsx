@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import styled from "styled-components";
 import axios from "axios";
 
@@ -18,14 +18,19 @@ const StyledHello = styled.div`
 const App = () => {
   const initialValues = {
     message: [{ role: "user", content: "" }],
-    title: "たけのこ派",
+    title: "たけのこの里よりもきのこの山のほうが美味しい",
     flag: true,
   };
 
   // APIにリクエストした回数をカウントする
   const [count, setCount] = useState(0);
-  const [formValues, setFromValues] = useState(initialValues);
+  const [formValues, setFormValues] = useState(initialValues);
+  const [formStartValues, setFormStartValues] = useState({ title: "" });
   const [messageValues, setMessageFromValues] = useState(initialValues);
+  const [checkResult, setCheckResult] = useState(false);
+  const [checkStart, setCheckStartResult] = useState(false);
+
+  const formRef = useRef(null);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -33,21 +38,7 @@ const App = () => {
       .post(
         "http://localhost:8080/api/debate/",
         {
-          message: [
-            {
-              role: "user",
-              content: "きのこの里より、たけのこの里のほうが美味しいです。",
-            },
-            {
-              role: "assistant",
-              content:
-                "私は「きのこの里のほうが美味しい」と主張します。きのこの里は、口どけの良いチョコレートと、ほんのりとしたきのこの風味が絶妙にマッチしています。また、その独特な食感も魅力の一つです。たけのこの里も美味しいですが、きのこの里の方がより多くの人々に愛されており、その証拠に売り上げも高いです。",
-            },
-            {
-              role: "user",
-              content: "きのこの里より、たけのこの里のほうが売上は高いですよ",
-            },
-          ],
+          message: formValues.message,
           title: formValues.title,
           flag: formValues.flag,
         },
@@ -61,8 +52,61 @@ const App = () => {
       )
       .then((response) => {
         console.log("body:", response.status);
-        // setCount(count + 1);
+        setCount(count + 1);
+        console.log(count);
+        setFormValues(response.data);
+        const newMessage = { role: "user", content: "" };
+        setFormValues((prevFormValues) => ({
+          ...prevFormValues,
+          message: [...prevFormValues.message, newMessage], // 新しいメッセージを追加
+        }));
         console.log(response.data);
+        if (count >= 3) {
+          setCheckResult(true);
+          handleJudgeSubmit();
+        }
+      })
+      .catch((error) => {
+        // console.log("error.response.data");
+      });
+    formRef.current.reset();
+  };
+
+  const handleJudgeSubmit = async () => {
+    await axios
+      .post(
+        "http://localhost:8080/api/judge/",
+        {
+          message: formValues.message,
+          title: formValues.title,
+          flag: formValues.flag,
+        },
+        {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      )
+      .then((response) => {
+        console.log("body:", response.data);
+
+        setFormValues((prevFormValues) => ({
+          ...prevFormValues,
+          message: [
+            ...prevFormValues.message,
+            { role: "assistant", content: "勝者：" + response.data["winner"] },
+          ], // 新しいメッセージを追加
+        }));
+
+        setFormValues((prevFormValues) => ({
+          ...prevFormValues,
+          message: [
+            ...prevFormValues.message,
+            { role: "assistant", content: response.data["comment"] },
+          ], // 新しいメッセージを追加
+        }));
       })
       .catch((error) => {
         // console.log("error.response.data");
@@ -72,43 +116,95 @@ const App = () => {
   const handleChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
     // console.log(e.target);
     const { name, value } = e.target;
-    setFromValues({
-      ...formValues,
-      [name]: [
-        {
-          role: "user",
-          content: value,
-        },
-      ],
+    const newMessage = { role: "user", content: value };
+
+    setFormValues((prevFormValues) => {
+      const updatedMessages = [...prevFormValues.message]; // 既存のメッセージをコピー
+      const lastMessageIndex = updatedMessages.length - 1;
+
+      // 最後のメッセージの content を更新
+      updatedMessages[lastMessageIndex].content = value;
+
+      return {
+        ...prevFormValues,
+        message: updatedMessages, // 更新されたメッセージをセット
+      };
     });
     console.log(formValues);
   };
 
+  const handleStartChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // console.log(e.target);
+    const { name, value } = e.target;
+    setFormStartValues({ ...formStartValues, [name]: value });
+
+    console.log("formStartValues :", formStartValues);
+  };
+
   const handleGameStart = async (e: React.FormEvent<HTMLFormElement>) => {
-    await axios
-      .get("http://localhost:8080/api/", {})
-      .then((response) => {
-        console.log("body:", response.status);
-      })
-      .catch((error) => {
-        console.log(error.response.data);
+    e.preventDefault();
+    if (
+      formStartValues.title === "ランダム" ||
+      formStartValues.title === "random"
+    ) {
+      await axios
+        .get("http://localhost:8080/api/randomtheme/", {
+          withCredentials: true,
+        })
+        .then((response) => {
+          console.log("body:", response.data);
+          setFormValues({
+            ...formValues,
+            title: response.data["title"],
+          });
+          setCheckStartResult(true);
+        })
+        .catch((error) => {
+          console.log(error.response);
+        });
+    } else {
+      setFormValues({
+        ...formValues,
+        title: formValues["title"],
       });
+    }
+    console.log("formValues", formValues);
+    formRef.current.reset();
   };
 
   return (
     <div>
       <StyledHello>debate</StyledHello>
-      <form onSubmit={(e) => handleSubmit(e)}>
-        <input
-          type="text"
-          placeholder="入力"
-          name="message"
-          onChange={(e) => handleChanged(e)}
-        />
-        <button>送信</button>
-      </form>
+      {checkStart ? (
+        <form onSubmit={(e) => handleSubmit(e)} ref={formRef}>
+          <input
+            type="text"
+            placeholder="入力"
+            name="message"
+            onChange={(e) => handleChanged(e)}
+          />
+          <button>送信</button>
+        </form>
+      ) : (
+        <form onSubmit={(e) => handleGameStart(e)} ref={formRef}>
+          <input
+            type="text"
+            placeholder="タイトルを入力"
+            name="title"
+            onChange={(e) => handleStartChanged(e)}
+          />
+          <button>送信</button>
+        </form>
+      )}
 
-      {formValues.message[0].content}
+      {formValues.message.length < 2
+        ? formValues.message[formValues.message.length - 1].content
+        : formValues.message[formValues.message.length - 2].content}
+      {checkResult ? (
+        <p>{formValues.message[formValues.message.length - 1].content}</p>
+      ) : (
+        <></>
+      )}
     </div>
   );
 };
