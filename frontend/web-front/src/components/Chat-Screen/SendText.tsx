@@ -13,6 +13,7 @@ const SendDiv = styled.div`
         border-radius: 16px; 
         border: solid 0.5px black;
         font-size: 20px;
+        z-index: 2;
     }
 `
 
