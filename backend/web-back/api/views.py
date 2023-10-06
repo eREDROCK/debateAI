@@ -28,21 +28,27 @@ class RandomThemeAPI(APIView):
 class DebateAPI(APIView):
   permission_classes = ()
   authentication_classes = ()
+
   def post(self,request):
     postedJsonBody=json.loads(request.body) #json形式のruquestをPythonで扱える形に変換
     title=postedJsonBody["title"]
     roleflag=postedJsonBody["flag"]
+
     if(roleflag=="true"): role="否定派" #roleflagがTrueの時はassistantが否定派(roleはassistantの派閥を表す)
     else: role="賛成派"
+
     jsonmessage=postedJsonBody["message"]
     result=list(DefaetedJudge(jsonmessage)) # 直前の会話でuserがassistantを論破していれば[True]，そうでなければ[False]を出力
     shapedresult=""
+
     for Result in result:
       if Result == "[" or Result == "]": #受け取った文字列から[]を消す
           continue
       else: shapedresult=shapedresult + Result 
+
     aiResponse=Ask_ChatGPT(jsonmessage,title,role) #userの入力に対するassistantの返答を出力
     jsonmessage.append({"role":"assistant", "content":aiResponse}) #jsonの"message"キーの値にassiatantの返答を追加
+
     response={
       "message": jsonmessage,
       "title": title,
@@ -56,6 +62,7 @@ class DebateAPI(APIView):
 class JudgeAPI(APIView):
   permission_classes = ()
   authentication_classes = ()
+  
   def post(self,request):
     postedJsonBody=json.loads(request.body)
     messages=postedJsonBody["message"]
