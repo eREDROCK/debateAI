@@ -6,11 +6,14 @@ import PlayerAI from "../../components/Player-AI-box/Player-AI-box";
 import ThemeBox from "../../components/ThemeBox/ThemeBox";
 import ChatScreen from "../../components/Chat-Screen/ChatScreen";
 import axios from "axios";
+import Image from "next/image";
 
 //rolo{1} Ai 左　{2}ユーザ　右
 
 const BodyDiv = styled.div`
     position: fixed;
+    background-image: url('/image/BackGround.png'); // 背景画像の相対パスを指定
+    background-size: cover; // 画像をコンテナに合わせて拡大縮小
     top: 0;
     left: 0;
     right: 0;
@@ -64,7 +67,7 @@ const BodyDiv = styled.div`
 
     .AllAudi {
         display: flex;
-        transform: translateY(140px);
+        transform: translateY(0px);
     }
     .AudiA {
         display: flex;
@@ -109,6 +112,10 @@ const App = () => {
       const handleInputBlur = () => {
         setIsInputting(false);
       };
+      
+      /*const onFormSubmit = () => {                 //お題，賛成派の変数受け取り
+        setFromValues();
+      }*/
     
       const handleChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
         // console.log(e.target);
@@ -162,8 +169,6 @@ const App = () => {
           });
       };
 
-const themeText = "";
-const flagValue = " ";
 
   return (
     <BodyDiv>
@@ -190,12 +195,12 @@ const flagValue = " ";
 
                 <ul className="Player">
                     <div>
-                        <ThemeBox theme={themeText} flag={flagValue} />
+                        <ThemeBox theme={"お題"} flag={true} />
                         <li className="AI"><PlayerAI role={1} isInputting={isInputting} isLoading={isLoading}/> </li>                    
                     </div>
                     <ChatScreen/>
                     <div>
-                        <ThemeBox theme={themeText} flag={flagValue} />
+                        <ThemeBox theme={"お題"} flag={true} />
                         <li className="User"><PlayerAI role={0} isInputting={isInputting} isLoading={isLoading}/> </li>                    
                     </div>
                 </ul>

@@ -61,14 +61,14 @@ const BodyDiv = styled.div`
 }
 
   h1 {
-    margin: auto;
-    margin-top: 50px;
+    margin-top: 10px;
   }
 
   .FlexBox {
-    margin-top: 80px;
+    margin-top: 50px;
     display: flex;
     justify-content: space-between;
+    transform: translateY(-100px);
   }
 
 `
