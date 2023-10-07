@@ -4,6 +4,7 @@ import Audience from "../../components/Audience/Audience";
 import Cylinder from "../../components/Cylinder/Cylinder";
 import PlayerAI from "../../components/Player-AI-box/Player-AI-box";
 import ThemeBox from "../../components/ThemeBox/ThemeBox";
+import ChatScreen from "../../components/Chat-Screen/ChatScreen";
 import axios from "axios";
 
 //rolo{1} Ai 左　{2}ユーザ　右
@@ -161,7 +162,7 @@ const App = () => {
           });
       };
 
-const themeText = " ";
+const themeText = "";
 const flagValue = " ";
 
   return (
@@ -187,13 +188,14 @@ const flagValue = " ";
     </div>
 
 
-                    <ul className="Player">
+                <ul className="Player">
                     <div>
-                        <ThemeBox theme={"お題"} flag={true} />
+                        <ThemeBox theme={themeText} flag={flagValue} />
                         <li className="AI"><PlayerAI role={1} isInputting={isInputting} isLoading={isLoading}/> </li>                    
                     </div>
+                    <ChatScreen/>
                     <div>
-                        <ThemeBox theme={"お題"} flag={true} />
+                        <ThemeBox theme={themeText} flag={flagValue} />
                         <li className="User"><PlayerAI role={0} isInputting={isInputting} isLoading={isLoading}/> </li>                    
                     </div>
                 </ul>
