@@ -72,8 +72,24 @@ const BodyDiv = styled.div`
     background: rgba(97, 63, 246, 0.8);
     font-size: 15px;
     text-align: left;
-
     justify-content: flex-start;
+    white-space: normal; /* または break-spaces */
+    word-wrap: break-word;
+  }
+
+  .txts .TextAnime {
+    display: flex;
+    overflow: hidden;
+    white-space: nowrap;
+    animation: txtanime 2s steps(15, end) forwards;
+  }
+  @keyframes txtanime {
+    0% {
+      width: 0%;
+    }
+    100% {
+      width: 100%;
+    }
   }
 
   .txts_r p {
@@ -171,6 +187,34 @@ function ChatScreen() {
     console.log(formValues);
   };
 
+  const TypingAnimation = ({ text }) => {
+    const [displayText, setDisplayText] = useState("");
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [animationComplete, setAnimationComplete] = useState(false);
+
+    useEffect(() => {
+      if (animationComplete) {
+        return; // アニメーションが完了したら何も表示しない
+      }
+
+      const typingInterval = setInterval(() => {
+        if (currentIndex < text.length) {
+          setDisplayText((prevText) => prevText + text[currentIndex]);
+          setCurrentIndex((prevIndex) => prevIndex + 1);
+        } else {
+          clearInterval(typingInterval);
+          setAnimationComplete(true); // アニメーションが完了したことをマーク
+        }
+      }, 100); // 100ミリ秒ごとに1文字ずつ表示
+
+      return () => {
+        clearInterval(typingInterval);
+      };
+    }, [currentIndex, text, animationComplete]);
+
+    return <div>{animationComplete ? text : displayText}</div>;
+  };
+
   return (
     <div>
       <OutLineDiv>
@@ -181,7 +225,13 @@ function ChatScreen() {
               <div>
                 {text["role"] === "assistant" ? (
                   <div key={index} className="txts">
-                    <p>{text["content"]}</p>
+                    <p>
+                      {index === texts.length - 1 ? (
+                        <TypingAnimation text={text["content"]} />
+                      ) : (
+                        <span>{text["content"]}</span>
+                      )}
+                    </p>
                   </div>
                 ) : (
                   <div key={index} className="txts_r">
