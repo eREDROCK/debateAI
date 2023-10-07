@@ -17,16 +17,17 @@ def Ask_ChatGPT(message,title,role):
     messages = [{
         "role":"system", "content":"あなたはディベートのスペシャリストです。これから私とあなたでディベートを行います。あなたはテーマに対して肯定派、否定派のいずれかとして私と討議します。その中であなたは私への説得、発言のタイミングや戦略、私の意見への反論などを行い、あなたの意見がより納得できる内容であることを読み手に伝わるように発言してください。 初めに「テーマ」とあなたと私、いずれが「肯定派」「否定派」かの指定を行い、その後、私とあなたでこのテーマについて繰り返し議論を行います。それでは始めます。テーマは「" + title + "」、あなたは「" + role + "」です。端的に50文字程度で返答してください。"
     }]
-
+    message = message[:-2] + [{"role":message[-1]["role"], "content":message[-1]["content"]+" 100文字以内で返答してください"}] 
     messages = messages + message 
     print(messages)
     
     # 応答設定
+    response = None
     try:
         response = openai.ChatCompletion.create(
                     model    = "gpt-3.5-turbo",     # モデルを選択
                     messages = messages,
-                    max_tokens  = 2048,             # 生成する文章の最大単語数
+                    # max_tokens  = 2048,             # 生成する文章の最大単語数
                     n           = 1,                # いくつの返答を生成するか
                     stop        = None,             # 指定した単語が出現した場合、文章生成を打ち切る
                     temperature = 0.5,              # 出力する単語のランダム性（0から2の範囲） 0であれば毎回返答内容固定
@@ -44,9 +45,21 @@ def Ask_ChatGPT(message,title,role):
         #Handle rate limit error (we recommend using exponential backoff)
         print(f"OpenAI API request exceeded rate limit: {e}")
         pass
+    except openai.error.Timeout as e:
+        print(f"error Timeout: {e}")
+        pass
+    except openai.error.InvalidRequestError as e:
+        print(f"error InvalidRequestError: {e}")
+        pass
+    except openai.error.ServiceUnavailableError as e:
+        print(f"error ServiceUnavailableError: {e}")
+        pass
+    except openai.error.AuthenticationError as e:
+        print(f"error AuthenticationError: {e}")
+        pass
     
     # 応答
-    print(response)
+    # print(response)
     # response = completion.choices[0].message.content
     response = response["choices"][0]["message"]["content"]
     print("ok")
@@ -58,7 +71,7 @@ def Ask_ChatGPT(message,title,role):
 def Judge_debate(message):
 
     messages = [{
-        "role":"system", "content":"あなたはディベートの判定をするスペシャリストです。userとassistantどちらの内容が論理的で相手の会話を論破していたか判定してください。また、どの論点が優れていたかコメントしてください。判定の結果は、「'勝者:[ここに記述]'、'コメント:[ここに記述]'」の[]の中に[]も含めて記述して回答してください。"
+        "role":"system", "content":"あなたはディベートの判定をするスペシャリストです。userとassistantどちらの内容が論理的で相手の会話を論破していたか判定してください。また、どの論点が優れていたかコメントしてください。判定の結果は、「'勝者:[ここに記述]'、'コメント:[ここに記述]'」の[]の中に[]も含めて記述して回答してください。100文字程度で返答してください"
     }]
 
     content = ""
@@ -67,17 +80,18 @@ def Judge_debate(message):
 
     messages = messages + [{"role":"user", "content":content}]
 
+    response = None
     # 応答設定
     try:
         response = openai.ChatCompletion.create(
                     model    = "gpt-3.5-turbo",     # モデルを選択
                     messages = messages,
-                    max_tokens  = 2048,             # 生成する文章の最大単語数
+                    # max_tokens  = 2048,             # 生成する文章の最大単語数
                     n           = 1,                # いくつの返答を生成するか
                     stop        = None,             # 指定した単語が出現した場合、文章生成を打ち切る
                     temperature = 0.5,              # 出力する単語のランダム性（0から2の範囲） 0であれば毎回返答内容固定
         )
-    
+
     except openai.error.APIError as e:
         #Handle API error here, e.g. retry or log
         print(f"OpenAI API returned an API Error: {e}")
@@ -89,6 +103,18 @@ def Judge_debate(message):
     except openai.error.RateLimitError as e:
         #Handle rate limit error (we recommend using exponential backoff)
         print(f"OpenAI API request exceeded rate limit: {e}")
+        pass
+    except openai.error.Timeout as e:
+        print("error openai: {e}")
+        pass
+    except openai.error.InvalidRequestError as e:
+        print("error openai: {e}")
+        pass
+    except openai.error.ServiceUnavailableError as e:
+        print("error openai: {e}")
+        pass
+    except openai.error.AuthenticationError as e:
+        print("error openai: {e}")
         pass
     
     response = response["choices"][0]["message"]["content"]
@@ -108,7 +134,7 @@ def DefaetedJudge(message):
     response = completion = openai.ChatCompletion.create(
                  model    = "gpt-3.5-turbo",     # モデルを選択
                  messages = messages,
-                 max_tokens  = 2048,             # 生成する文章の最大単語数
+                #  max_tokens  = 2048,             # 生成する文章の最大単語数
                  n           = 1,                # いくつの返答を生成するか
                  stop        = None,             # 指定した単語が出現した場合、文章生成を打ち切る
                  temperature = 0.5,              # 出力する単語のランダム性（0から2の範囲） 0であれば毎回返答内容固定

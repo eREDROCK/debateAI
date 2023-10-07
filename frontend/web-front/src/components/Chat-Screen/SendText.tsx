@@ -187,7 +187,8 @@ function SendText({ onTextSubmit }) {
           });
           onTextSubmit({
             role: "assistant",
-            content: response.data["title"] + "について議論してください",
+            content:
+              response.data["title"] + "について肯定派として議論してください。",
           }); //チャット画面に反映
           setCheckStartResult(true);
         })

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 import SendText from "./SendText";
 import UserName from "../Username-box/UserNameBox";
@@ -72,8 +72,24 @@ const BodyDiv = styled.div`
     background: rgba(97, 63, 246, 0.8);
     font-size: 15px;
     text-align: left;
-
     justify-content: flex-start;
+    white-space: normal; /* または break-spaces */
+    word-wrap: break-word;
+  }
+
+  .txts .TextAnime {
+    display: flex;
+    overflow: hidden;
+    white-space: nowrap;
+    animation: txtanime 2s steps(15, end) forwards;
+  }
+  @keyframes txtanime {
+    0% {
+      width: 0%;
+    }
+    100% {
+      width: 100%;
+    }
   }
 
   .txts_r p {
@@ -114,7 +130,7 @@ const BodyDiv = styled.div`
   }
 `;
 
-function ChatScreen() {
+function ChatScreen(onFormSubmit) {
   const initialValues = {
     message: [],
     title: "たけのこの里よりもきのこの山のほうが美味しい",
@@ -128,16 +144,33 @@ function ChatScreen() {
   const increment = () => {
     setCount(count + 1);
   };
+  //   onFormSubmit(formValues);
 
   useEffect(() => {
     setTexts([]);
     setNames([]);
   }, []);
 
+  //   const onTextSubmit = (newText) => {
+  //     setTexts((prevTexts) => [...prevTexts, newText]);
+  //     console.log(texts);
+  //     increment();
+  //   };
+
+  const [newMessageAnimation, setNewMessageAnimation] = useState(false); // 新しいメッセージのアニメーションステート
+  const scrollContainerRef = useRef(null); // スクロールコンテナのリファレンス
+
   const onTextSubmit = (newText) => {
+    // 新しいメッセージが送信されたときにアニメーションをトリガー
+    setNewMessageAnimation(true);
+
+    // メッセージを追加
     setTexts((prevTexts) => [...prevTexts, newText]);
-    console.log(texts);
-    increment();
+
+    // // アニメーションが完了したらアニメーションステートをリセット
+    // setTimeout(() => {
+    //   setNewMessageAnimation(false);
+    // }, 2000); // 2秒後にリセット（アニメーションの時間に合わせて調整してください）
   };
 
   const scrollToBottom = () => {
@@ -171,6 +204,39 @@ function ChatScreen() {
     console.log(formValues);
   };
 
+  const TypingAnimation = ({ text }) => {
+    const [displayText, setDisplayText] = useState("");
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [animationComplete, setAnimationComplete] = useState(false);
+
+    useEffect(() => {
+      if (animationComplete) {
+        // アニメーションが完了したらスクロールを一番下に移動
+        scrollToBottom();
+        return; // アニメーションが完了したら何も表示しない
+      }
+
+      const typingInterval = setInterval(() => {
+        if (currentIndex < text.length) {
+          setDisplayText((prevText) => prevText + text[currentIndex]);
+          setCurrentIndex((prevIndex) => prevIndex + 1);
+
+          // スクロールを一番下に移動
+          scrollToBottom();
+        } else {
+          clearInterval(typingInterval);
+          setAnimationComplete(true); // アニメーションが完了したことをマーク
+        }
+      }, 100); // 100ミリ秒ごとに1文字ずつ表示
+
+      return () => {
+        clearInterval(typingInterval);
+      };
+    }, [currentIndex, text, animationComplete]);
+
+    return <div>{animationComplete ? text : displayText}</div>;
+  };
+
   return (
     <div>
       <OutLineDiv>
@@ -181,7 +247,13 @@ function ChatScreen() {
               <div>
                 {text["role"] === "assistant" ? (
                   <div key={index} className="txts">
-                    <p>{text["content"]}</p>
+                    <p>
+                      {index === texts.length - 1 ? (
+                        <TypingAnimation text={text["content"]} />
+                      ) : (
+                        <span>{text["content"]}</span>
+                      )}
+                    </p>
                   </div>
                 ) : (
                   <div key={index} className="txts_r">
