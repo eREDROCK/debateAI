@@ -130,7 +130,7 @@ const BodyDiv = styled.div`
   }
 `;
 
-function ChatScreen() {
+function ChatScreen(onFormSubmit) {
   const initialValues = {
     message: [],
     title: "たけのこの里よりもきのこの山のほうが美味しい",
@@ -144,6 +144,7 @@ function ChatScreen() {
   const increment = () => {
     setCount(count + 1);
   };
+  //   onFormSubmit(formValues);
 
   useEffect(() => {
     setTexts([]);
