@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 import SendText from "./SendText";
 import UserName from "../Username-box/UserNameBox";
@@ -150,10 +150,26 @@ function ChatScreen() {
     setNames([]);
   }, []);
 
+  //   const onTextSubmit = (newText) => {
+  //     setTexts((prevTexts) => [...prevTexts, newText]);
+  //     console.log(texts);
+  //     increment();
+  //   };
+
+  const [newMessageAnimation, setNewMessageAnimation] = useState(false); // 新しいメッセージのアニメーションステート
+  const scrollContainerRef = useRef(null); // スクロールコンテナのリファレンス
+
   const onTextSubmit = (newText) => {
+    // 新しいメッセージが送信されたときにアニメーションをトリガー
+    setNewMessageAnimation(true);
+
+    // メッセージを追加
     setTexts((prevTexts) => [...prevTexts, newText]);
-    console.log(texts);
-    increment();
+
+    // // アニメーションが完了したらアニメーションステートをリセット
+    // setTimeout(() => {
+    //   setNewMessageAnimation(false);
+    // }, 2000); // 2秒後にリセット（アニメーションの時間に合わせて調整してください）
   };
 
   const scrollToBottom = () => {
@@ -194,6 +210,8 @@ function ChatScreen() {
 
     useEffect(() => {
       if (animationComplete) {
+        // アニメーションが完了したらスクロールを一番下に移動
+        scrollToBottom();
         return; // アニメーションが完了したら何も表示しない
       }
 
@@ -201,6 +219,9 @@ function ChatScreen() {
         if (currentIndex < text.length) {
           setDisplayText((prevText) => prevText + text[currentIndex]);
           setCurrentIndex((prevIndex) => prevIndex + 1);
+
+          // スクロールを一番下に移動
+          scrollToBottom();
         } else {
           clearInterval(typingInterval);
           setAnimationComplete(true); // アニメーションが完了したことをマーク
