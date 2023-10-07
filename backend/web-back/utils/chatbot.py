@@ -17,7 +17,7 @@ def Ask_ChatGPT(message,title,role):
     messages = [{
         "role":"system", "content":"あなたはディベートのスペシャリストです。これから私とあなたでディベートを行います。あなたはテーマに対して肯定派、否定派のいずれかとして私と討議します。その中であなたは私への説得、発言のタイミングや戦略、私の意見への反論などを行い、あなたの意見がより納得できる内容であることを読み手に伝わるように発言してください。 初めに「テーマ」とあなたと私、いずれが「肯定派」「否定派」かの指定を行い、その後、私とあなたでこのテーマについて繰り返し議論を行います。それでは始めます。テーマは「" + title + "」、あなたは「" + role + "」です。端的に50文字程度で返答してください。"
     }]
-
+    message = message[:-2] + [{"role":message[-1]["role"], "content":message[-1]["content"]+" 100文字以内で返答してください"}] 
     messages = messages + message 
     print(messages)
     
@@ -46,16 +46,16 @@ def Ask_ChatGPT(message,title,role):
         print(f"OpenAI API request exceeded rate limit: {e}")
         pass
     except openai.error.Timeout as e:
-        print("error openai: {e}")
+        print(f"error Timeout: {e}")
         pass
     except openai.error.InvalidRequestError as e:
-        print("error openai: {e}")
+        print(f"error InvalidRequestError: {e}")
         pass
     except openai.error.ServiceUnavailableError as e:
-        print("error openai: {e}")
+        print(f"error ServiceUnavailableError: {e}")
         pass
     except openai.error.AuthenticationError as e:
-        print("error openai: {e}")
+        print(f"error AuthenticationError: {e}")
         pass
     
     # 応答
@@ -71,7 +71,7 @@ def Ask_ChatGPT(message,title,role):
 def Judge_debate(message):
 
     messages = [{
-        "role":"system", "content":"あなたはディベートの判定をするスペシャリストです。userとassistantどちらの内容が論理的で相手の会話を論破していたか判定してください。また、どの論点が優れていたかコメントしてください。判定の結果は、「'勝者:[ここに記述]'、'コメント:[ここに記述]'」の[]の中に[]も含めて記述して回答してください。80文字程度で返答してください"
+        "role":"system", "content":"あなたはディベートの判定をするスペシャリストです。userとassistantどちらの内容が論理的で相手の会話を論破していたか判定してください。また、どの論点が優れていたかコメントしてください。判定の結果は、「'勝者:[ここに記述]'、'コメント:[ここに記述]'」の[]の中に[]も含めて記述して回答してください。100文字程度で返答してください"
     }]
 
     content = ""
