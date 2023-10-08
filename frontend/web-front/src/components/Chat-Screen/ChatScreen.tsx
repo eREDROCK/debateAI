@@ -144,7 +144,7 @@ function ChatScreen(onFormSubmit) {
   const increment = () => {
     setCount(count + 1);
   };
-  //   onFormSubmit(formValues);
+  //  onFormSubmit(formValues);
 
   useEffect(() => {
     setTexts([]);
