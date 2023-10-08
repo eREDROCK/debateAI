@@ -54,16 +54,16 @@ const BodyDiv = styled.div`
     display: flex;
     list-style: none;
     transform: translateY(10px);
-    justify-content: space-between;
+    justify-content: space-evenly;
     padding-inline-start: 0;
   }
   .AI {
-    width: 400px;
-    height: 400px;
+    max-width: 400px;
+    max-height: 400px;
   }
   .User {
-    width: 400px;
-    height: 400px;
+    max-width: 400px;
+    max-height: 400px;
     margin-right: 40px;
   }
 

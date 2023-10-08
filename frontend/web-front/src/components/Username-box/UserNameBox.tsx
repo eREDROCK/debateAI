@@ -1,42 +1,40 @@
-import Link from 'next/link';
-import React, {useState} from 'react'
-import styled from 'styled-components';
-
+import Link from "next/link";
+import React, { useState } from "react";
+import styled from "styled-components";
 
 const BoxDiv = styled.div`
   text-align: center;
   margin-left: auto;
   margin-right: auto;
-  width: 450px;
+  width: 40%;
   height: 350px;
   padding: 15px 0px 15px 0px;
   border: solid 3px #999999;
-  border-radius: 40px;       /* 枠を角丸にする */
-
+  border-radius: 40px; /* 枠を角丸にする */
 
   .LocationDiv {
-    margin-Top: 220px;    
+    margin-top: 220px;
   }
 
   .StartButton {
     width: 160px;
     height: 40px;
-    fontWidth: 10px; 
+    fontwidth: 10px;
     font-size: 20px;
     margin-top: 10px;
     border-radius: 40px;
     box-shadow: 0 6px 0 #aaaaaa;
     cursor: pointer;
-  
+
     & ::hover {
       color: #333333;
       text-decoration: none;
       background-color: #a0c4d3;
     }
-  
+
     &:active {
       transform: translateY(3px);
-    }    
+    }
   }
 
   .InputName {
@@ -47,7 +45,7 @@ const BoxDiv = styled.div`
     background-color: rgba(250, 250, 250, 0.6);
     border: 1px solid;
   }
-` 
+`;
 
 const Triangle = styled.div`
   width: 20px;
@@ -55,47 +53,45 @@ const Triangle = styled.div`
   clip-path: polygon(0 0, 0% 100%, 100% 50%);
   margin-top: -28px;
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); /* 影の設定 */
-  background-color: #00FFFF;
-`
+  background-color: #00ffff;
+`;
 
 const UserNameBox = () => {
-
-  const [userName,setUserName] = useState('');
+  const [userName, setUserName] = useState("");
 
   const handleInputChange = (e) => {
     setUserName(e.target.value);
-  }
+  };
 
   function gameStart() {
-    if(userName === '') return;
+    if (userName === "") return;
     //alert(userName);
     return (
       <Link href="/debate">
         <a>Start Game</a>
       </Link>
-    )
+    );
   }
 
   return (
-    <BoxDiv >
-      <div className='LocationDiv'>
-        <input className='InputName' 
-          type="text" 
-          value={userName} 
+    <BoxDiv>
+      <div className="LocationDiv">
+        <input
+          className="InputName"
+          type="text"
+          value={userName}
           onChange={handleInputChange}
           placeholder="名前を入力してください"
         />
         <Link href="/debate">
-        <button onClick={gameStart} className='StartButton'>
-          はじめる
-          <Triangle />
-        </button>        
+          <button onClick={gameStart} className="StartButton">
+            はじめる
+            <Triangle />
+          </button>
         </Link>
-
       </div>
-      
     </BoxDiv>
   );
-}
+};
 
-export default UserNameBox
+export default UserNameBox;

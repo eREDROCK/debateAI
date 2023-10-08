@@ -35,9 +35,8 @@ const BoxDiv = styled.div`
 const ThemeBox = (props: { theme; flag }) => {
   return (
     <BoxDiv>
-      <li className="title">お題</li>
       {props.theme === "お題" ? (
-        <></>
+        <li className="title">お題</li>
       ) : (
         <li className="title">{props.theme}</li>
       )}

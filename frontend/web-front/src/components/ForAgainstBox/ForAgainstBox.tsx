@@ -21,7 +21,7 @@ const BoxDiv = styled.div`
     padding: 0px 0px 0px 0px;
   }
   .flag {
-    /* display: inline-block; */
+    display: inline-block;
     font-size: 40px;
     font-family: "游ゴシック";
     color: #ffffff;

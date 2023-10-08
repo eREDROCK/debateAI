@@ -3,6 +3,12 @@ import styled from "styled-components";
 import SendText from "./SendText";
 import UserName from "../Username-box/UserNameBox";
 
+const AllDiv = styled.div`
+  /* position: fixed; */
+  display: inline-flexbox;
+  min-width: 500px;
+`;
+
 const OutLineDiv = styled.div`
   /* position: fixed; */
   display: flex;
@@ -131,26 +137,11 @@ const BodyDiv = styled.div`
     max-width: 80%;
     border-radius: 12px;
     background: rgba(97, 63, 246, 0.8);
-    font-size: 15px;
+    font-size: 24px;
     text-align: left;
     justify-content: flex-start;
     white-space: normal; /* または break-spaces */
     word-wrap: break-word;
-  }
-
-  .txts .TextAnime {
-    display: flex;
-    overflow: hidden;
-    white-space: nowrap;
-    animation: txtanime 2s steps(15, end) forwards;
-  }
-  @keyframes txtanime {
-    0% {
-      width: 0%;
-    }
-    100% {
-      width: 100%;
-    }
   }
 
   .txts_r p {
@@ -161,7 +152,7 @@ const BodyDiv = styled.div`
     max-width: 80%;
     border-radius: 12px;
     background: rgba(241, 74, 74, 0.8);
-    font-size: 15px;
+    font-size: 24px;
     text-align: left;
     justify-content: flex-end;
   }
@@ -210,6 +201,7 @@ function ChatScreen({
   const [count, setCount] = useState(0);
   const [checkStartGame, setCheckStartGame] = useState(true); //ゲームが一番最初に開始したかチェックする開始
   const [checkJudgeGame, setCheckJudgeGame] = useState(false); //ゲームが一番最初に開始したかチェックする開始
+  const [animationCompleteCheck, setAnimationCompleteCheck] = useState(false);
 
   const increment = () => {
     setCount(count + 1);
@@ -257,6 +249,7 @@ function ChatScreen({
     const [displayText, setDisplayText] = useState("");
     const [currentIndex, setCurrentIndex] = useState(0);
     const [animationComplete, setAnimationComplete] = useState(false);
+    // setAnimationCompleteCheck(false);
 
     useEffect(() => {
       if (animationComplete) {
@@ -275,8 +268,9 @@ function ChatScreen({
         } else {
           clearInterval(typingInterval);
           setAnimationComplete(true); // アニメーションが完了したことをマーク
+          //   setAnimationCompleteCheck(true);
         }
-      }, 100); // 100ミリ秒ごとに1文字ずつ表示
+      }, 80); // 100ミリ秒ごとに1文字ずつ表示
 
       return () => {
         clearInterval(typingInterval);
@@ -315,7 +309,7 @@ function ChatScreen({
   }, [checkJudgeGame]);
 
   return (
-    <div>
+    <AllDiv>
       <OutLineDiv>
         <BodyDiv>
           <div className="styledtxts">
@@ -361,7 +355,7 @@ function ChatScreen({
         onFormSubmit={onFormSubmit}
         setCheckJudgeGame={setCheckJudgeGame}
       />
-    </div>
+    </AllDiv>
   );
 }
 
