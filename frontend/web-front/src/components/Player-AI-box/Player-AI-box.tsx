@@ -1,28 +1,83 @@
 import React from "react";
 import Image from "next/image";
 
-const  Player=({role, isInputting,isLoading}: {role: number; isInputting: boolean; isLoading: boolean})=>{
-
-  if (role === 0) {//ユーザー画像の処理
-    return(
+const Player = ({
+  role,
+  isInputting,
+  isLoading,
+  defeatedState,
+}: {
+  role: number;
+  isInputting: boolean;
+  isLoading: boolean;
+  defeatedState: boolean;
+}) => {
+  if (role === 0) {
+    //ユーザー画像の処理
+    return (
       <div>
-         {isInputting ? (<Image src="/image/HumanSpeak.png" layout="responsive"  sizes="5%" alt="none" width={10} height={10}/>) 
-         : (<Image src="/image/HumanThink.png" layout="responsive" alt="none" width={1} height={1}/>)}
+        {isLoading ? (
+          <Image
+            src="/image/HumanSpeak.png"
+            layout="responsive"
+            sizes="5%"
+            alt="none"
+            width={10}
+            height={10}
+          />
+        ) : (
+          <Image
+            src="/image/HumanThink.png"
+            layout="responsive"
+            alt="none"
+            width={1}
+            height={1}
+          />
+        )}
       </div>
     );
-  } else {//AI画像の処理
-    return(
+  } else {
+    //AI画像の処理
+    return (
       <div>
-        {isInputting || isLoading ? (<Image src="/image/AIThink.png" layout="responsive" sizes="5%" alt="none" width={10} height={10}/>) 
-         : (<Image src="/image/AISpeak.png" layout="responsive" sizes="5%" alt="none" width={10} height={10}/>)}
+        {isInputting || isLoading ? (
+          <>
+            {defeatedState ? (
+              <Image
+                src="/image/AIDefeated.png"
+                layout="responsive"
+                sizes="5%"
+                alt="none"
+                width={10}
+                height={10}
+              />
+            ) : (
+              <Image
+                src="/image/AIThink.png"
+                layout="responsive"
+                sizes="5%"
+                alt="none"
+                width={10}
+                height={10}
+              />
+            )}
+          </>
+        ) : (
+          <Image
+            src="/image/AISpeak.png"
+            layout="responsive"
+            sizes="5%"
+            alt="none"
+            width={10}
+            height={10}
+          />
+        )}
       </div>
     );
   }
 };
 
-
 export default Player;
-
 
 // ゲーム画面に合体するときは以下の部分を入れてください
 // const [isInputting, setIsInputting] = useState(false);

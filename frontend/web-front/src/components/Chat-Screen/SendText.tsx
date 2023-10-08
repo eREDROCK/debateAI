@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -17,7 +17,14 @@ const SendDiv = styled.div`
   }
 `;
 
-function SendText({ onTextSubmit }) {
+function SendText({
+  onTextSubmit,
+  onFormSubmit,
+  handleInput,
+  setIsLoading,
+  handleInputBlur,
+  setCheckJudgeGame,
+}) {
   const [text, setText] = useState("");
   const initialValues = {
     message: [{ role: "user", content: "" }],
@@ -37,9 +44,11 @@ function SendText({ onTextSubmit }) {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsLoading(true);
     const csrfToken = Cookies.get("csrftoken");
 
     onTextSubmit(formValues.message[formValues.message.length - 1]);
+    onFormSubmit(formValues);
     formRef.current.reset();
 
     await axios
@@ -78,6 +87,8 @@ function SendText({ onTextSubmit }) {
         onTextSubmit(
           response.data["message"][response.data["message"].length - 1]
         );
+        onFormSubmit(response.data);
+        setIsLoading(false);
       })
       .catch((error) => {
         // console.log("error.response.data");
@@ -87,6 +98,7 @@ function SendText({ onTextSubmit }) {
   const handleJudgeSubmit = async () => {
     const csrfToken = Cookies.get("csrftoken");
     console.log("judge now");
+    setCheckJudgeGame(true); //ジャッジ中
     await axios
       .post(
         "http://localhost:8080/api/judge/",
@@ -133,6 +145,7 @@ function SendText({ onTextSubmit }) {
           ], // 新しいメッセージを追加
         }));
         console.log("judge end");
+        setCheckJudgeGame(false); //ジャッジ中
       })
       .catch((error) => {
         console.log(error.response);
@@ -221,6 +234,8 @@ function SendText({ onTextSubmit }) {
             placeholder="入力"
             name="message"
             onChange={(e) => handleChanged(e)}
+            // onFocus={handleInput} // formに入力中の時にhandleInputを呼び出す
+            // onBlur={handleInputBlur} // formに入力も何もしていないときにhandleInputBlurを呼び出す
           />
           <button>送信</button>
         </form>
@@ -232,6 +247,8 @@ function SendText({ onTextSubmit }) {
             placeholder="タイトルを入力"
             name="title"
             onChange={(e) => handleStartChanged(e)}
+            // onFocus={handleInput} // formに入力中の時にhandleInputを呼び出す
+            // onBlur={handleInputBlur} // formに入力も何もしていないときにhandleInputBlurを呼び出す
           />
           <button>送信</button>
         </form>
