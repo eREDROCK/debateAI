@@ -36,8 +36,8 @@ class DebateAPI(APIView):
     title=request.data["title"]
     roleflag=request.data["flag"]
 
-    if(roleflag=="true"): role="肯定派" #roleflagがTrueの時はassistantが否定派(roleはassistantの派閥を表す)
-    else: role="否定派"
+    if(roleflag==True): role="否定派" #roleflagがTrueの時はassistantが否定派(roleはassistantの派閥を表す)
+    else: role="肯定派"
 
     jsonmessage=request.data["message"]
     try:
@@ -46,7 +46,7 @@ class DebateAPI(APIView):
     except:
       result = False   
       print("defeat error")
-    print(result)
+    # print(result)
 
     aiResponse=Ask_ChatGPT(jsonmessage,title,role) #userの入力に対するassistantの返答を出力
     jsonmessage.append({"role":"assistant", "content":aiResponse}) #jsonの"message"キーの値にassiatantの返答を追加

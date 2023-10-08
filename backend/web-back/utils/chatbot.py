@@ -17,9 +17,9 @@ def Ask_ChatGPT(message,title,role):
     messages = [{
         "role":"system", "content":"あなたはディベートのスペシャリストです。これから私とあなたでディベートを行います。あなたはテーマに対して肯定派、否定派のいずれかとして私と討議します。その中であなたは私への説得、発言のタイミングや戦略、私の意見への反論などを行い、あなたの意見がより納得できる内容であることを読み手に伝わるように発言してください。 初めに「テーマ」とあなたと私、いずれが「肯定派」「否定派」かの指定を行い、その後、私とあなたでこのテーマについて繰り返し議論を行います。それでは始めます。テーマは「" + title + "」、あなたは「" + role + "」です。100文字程度で返答してください。"
     }]
-    message = message[:-2] + [{"role":message[-1]["role"], "content":message[-1]["content"]+" 150文字以内で意見や反論をしてください。"}] 
+    message = message[:-2] + [{"role":message[-1]["role"], "content":message[-1]["content"]+" 120文字以内で意見や反論をしてください。"}] 
     messages = messages + message 
-    print(messages)
+    # print(messages)
     
     # 応答設定
     response = None
