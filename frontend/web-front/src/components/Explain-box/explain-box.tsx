@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { InstructData } from "./InstructData";
+import Image from "next/image";
 
 const BoxDiv = styled.div`
   text-align: center;
@@ -15,22 +16,100 @@ const BoxDiv = styled.div`
   font-size: 24px;
   font-family: "游ゴシック";
 
+  white-space: pre-line;           
+
   li {
-    /* display: inline-block; */
     list-style: none;
     padding: 0px 0px 0px 0px;
+  }
+  .howtoplay {
+    color: #5CFFB6;
+    font-size: 30px;
+    font-weight: bold;
+    -webkit-text-stroke: 1px white;
+  }
+ 
+  .title {
+    font-family: "Black";
+    font-size: 20px;
+    color: #FFFFFF;
+    -webkit-letter-spacing: 0;
+    -moz-letter-spacing: 0;
+    -ms-letter-spacing: 0;
+    letter-spacing: 0;
+    text-align: center;
+    margin: 10px 0;
+  }
+
+  .inst {
+    font-family: "Regular";
+    font-size: 20px;
+    color: #FFFFFF;
+    -webkit-letter-spacing: 0;
+    -moz-letter-spacing: 0;
+    -ms-letter-spacing: 0;
+    letter-spacing: 0;
+    text-align: center;
+    line-height: 20px;
   }
 `;
 
 const CardDiv = styled.div`
-  width: 80%;
-  height: 300px;
 
-  margin-left: auto; /* 左の余白 */
-  margin-right: auto; /* 右の余白 */
-  margin-top: 10px; /* 上の余白 */
-  margin-bottom: 5px; /* 下の余白 */
+  color: white;
+  font-size: 15px;
+  font-weight: bold;
+  display: flex;
+  flex-direction: column;
+  -webkit-box-align: center;
+  align-items: center;
+
+  .allstyle {
+    display: flex;
+    margin: 10px 0 0;
+    display: none;
+    -ms-flex-direction: column;
+    -webkit-box-align: center;
+    -ms-flex-pack: center;
+    -ms-flex: 1;
+    flex: 1;
+    -ms-flex-item-align: stretch;
+    align-self: stretch;
+  }
+  .imgbox {
+    width: 224px;
+    height: 150px;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    margin: 0 0 20px 0;
+  }
+  .imgfield {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    margin: 0 auto;
+    outline: none;
+
+  
+  }
+  .img {
+    width: 100%;
+    height: 100%;
+    transform: translate3d(0px, 0px, 0px);
+  }
+
 `;
+
 
 const ExplainBox = () => {
   const [count, setCount] = useState(0);
@@ -47,14 +126,27 @@ const ExplainBox = () => {
 
   return (
     <BoxDiv>
-      <li>プレイ方法</li>
-      <CardDiv className="item">
-        <li>{InstructData[Math.floor(count / 3)].image}</li>
-        <li>{InstructData[Math.floor(count / 3)].instruction}</li>
-        <li>{count}</li>
-      </CardDiv>
+      <li className="howtoplay">プレイ方法</li>
+      <div className="allstyle">
+        <figure className="imgbox">
+          <div className="imgfield">
+        
+              <Image className="img"  src={InstructData[Math.floor(count / 3)].image} alt=""  width={100} height={100}></Image>
+         
+          </div>
+        </figure>
+        <CardDiv className="item">
+          <h4 className="title">{InstructData[Math.floor(count / 3)].title}</h4>
+          <p className="inst">{InstructData[Math.floor(count / 3)].instruction}</p>
+          
+        </CardDiv>
+      </div>
     </BoxDiv>
+    
   );
 };
 
 export default ExplainBox;
+
+
+//{InstructData[Math.floor(count / 3)].image}
