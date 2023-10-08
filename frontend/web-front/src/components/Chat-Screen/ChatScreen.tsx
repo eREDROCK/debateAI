@@ -13,6 +13,7 @@ const OutLineDiv = styled.div`
   /* background-color: #93aad4; */
   background: linear-gradient(#9b9b9b, rgba(0, 0, 0, 0));
   overflow: scroll;
+  overflow-x: hidden;
   /* border: solid 2px; */
   border-radius: 20px;
 `;

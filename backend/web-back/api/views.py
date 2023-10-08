@@ -8,6 +8,8 @@ from utils.chatbot import DefaetedJudge
 
 import random
 import json
+import re
+from distutils.util import strtobool
 
 
 
@@ -38,13 +40,13 @@ class DebateAPI(APIView):
     else: role="否定派"
 
     jsonmessage=request.data["message"]
-    # result=list(DefaetedJudge(jsonmessage)) # 直前の会話でuserがassistantを論破していれば[True]，そうでなければ[False]を出力
-    shapedresult=""
-
-    # for Result in result:
-    #   if Result == "[" or Result == "]": #受け取った文字列から[]を消す
-    #       continue
-    #   else: shapedresult=shapedresult + Result 
+    try:
+      result = DefaetedJudge(jsonmessage) # 直前の会話でuserがassistantを論破していれば[True]，そうでなければ[False]を出力
+      result = bool(strtobool(result.split('判定結果:')[1].strip()))
+    except:
+      result = False   
+      print("defeat error")
+    print(result)
 
     aiResponse=Ask_ChatGPT(jsonmessage,title,role) #userの入力に対するassistantの返答を出力
     jsonmessage.append({"role":"assistant", "content":aiResponse}) #jsonの"message"キーの値にassiatantの返答を追加
@@ -53,7 +55,7 @@ class DebateAPI(APIView):
       "message": jsonmessage,
       "title": title,
       "flag": roleflag,
-      "defeatedstate": shapedresult
+      "defeatedstate": result
     }
 
     return JsonResponse(response)
