@@ -45,6 +45,7 @@ const BoxDiv = styled.div`
     font-size: 20px;
     border-radius: 20px;
     background-color: rgba(250, 250, 250, 0.6);
+    border: 1px solid;
   }
 ` 
 
