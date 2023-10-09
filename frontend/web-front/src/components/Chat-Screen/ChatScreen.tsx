@@ -196,42 +196,21 @@ function ChatScreen({
   };
 
   const [texts, setTexts] = useState([]);
-  const [names, setNames] = useState([]);
+  //   const [names, setNames] = useState([]);
   const [formValues, setFormValues] = useState(initialValues);
-  const [count, setCount] = useState(0);
   const [checkStartGame, setCheckStartGame] = useState(true); //ゲームが一番最初に開始したかチェックする開始
   const [checkJudgeGame, setCheckJudgeGame] = useState(false); //ゲームが一番最初に開始したかチェックする開始
-  const [animationCompleteCheck, setAnimationCompleteCheck] = useState(false);
-
-  const increment = () => {
-    setCount(count + 1);
-  };
-  //  onFormSubmit(formValues);
+  //   const [animationCompleteCheck, setAnimationCompleteCheck] = useState(false);
+  //   onFormSubmit(formValues);
 
   useEffect(() => {
     setTexts([]);
-    setNames([]);
+    // setNames([]);
   }, []);
 
-  //   const onTextSubmit = (newText) => {
-  //     setTexts((prevTexts) => [...prevTexts, newText]);
-  //     console.log(texts);
-  //     increment();
-  //   };
-
-  const [newMessageAnimation, setNewMessageAnimation] = useState(false); // 新しいメッセージのアニメーションステート
-
   const onTextSubmit = (newText) => {
-    // 新しいメッセージが送信されたときにアニメーションをトリガー
-    setNewMessageAnimation(true);
-
     // メッセージを追加
     setTexts((prevTexts) => [...prevTexts, newText]);
-
-    // // アニメーションが完了したらアニメーションステートをリセット
-    // setTimeout(() => {
-    //   setNewMessageAnimation(false);
-    // }, 2000); // 2秒後にリセット（アニメーションの時間に合わせて調整してください）
   };
 
   const scrollToBottom = () => {
@@ -287,7 +266,7 @@ function ChatScreen({
       onTextSubmit({
         role: "assistant",
         content:
-          "DaBぇるへようこそ！ディベートをする前にまず最初にお題を決めましょう！　お題は自由に決めることができます。また、「ランダム」と入力すると自動でお題を決めることができます。お題を決めたらあなたは肯定派として意見をしてください。それではディベートを始めましょう!",
+          "DaBぇるへようこそ! ディベートをする前にまず最初にお題を決めましょう。 お題は自由に決めることができます。また、「ランダム」と入力すると自動でお題を決めることができます。お題を決めたらあなたは肯定派として意見をしてください。それではディベートを始めましょう!",
       });
 
       setCheckStartGame(false); // ゲームが開始されたことをマーク
