@@ -4,33 +4,35 @@ import UserNameBox from "../../components/Username-box/UserNameBox";
 import TitleBox from "../../components/Title-box/Title-box";
 import ExplainBox from "../../components/Explain-box/explain-box";
 
-
 const BodyDiv = styled.div`
+  border: none;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  background: linear-gradient(200deg, #3399ff 0%, #6699ff 100%);
+  background-attachment: fixed;
+  transition-property: background-image;
+  transition-duration: 1s;
+  margin: 0;
 
-border: none; 
-position: fixed;
-left: 0;
-right: 0;
-bottom: 0;
-background: linear-gradient(200deg, #3399FF 0%, #6699FF 100%); 
-background-attachment: fixed;
-transition-property: background-image; 
-transition-duration: 1s;
-margin: 0;
+  .bgimg {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    background-image: url("/image/TopBackGround.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+  }
 
-.bgimg {
-  
-  -ms-flex-direction: row;
-  flex-direction: row;
-  background-image: url('/image/TopBackGround.png');
-  background-repeat: no-repeat;
-  background-size: cover; 
-  background-position: center;
- 
-}
-   
   h1 {
-   /* margin-top: 10px;*/
+    /* margin-top: 10px;*/
   }
 
   .FlexBox {
@@ -39,27 +41,25 @@ margin: 0;
     justify-content: space-between;
     transform: translateY(-100px);
   }
-`
+`;
 
 const App = () => {
   return (
     <BodyDiv>
-    <div className="bgimg">
-      <h1><TitleBox /></h1>
-      <div className="FlexBox">
-        <UserNameBox  />
-        <ExplainBox />        
-      </div>    
+      <div className="bgimg">
+        <h1>
+          <TitleBox />
+        </h1>
+        <div className="FlexBox">
+          <UserNameBox />
+          <ExplainBox />
+        </div>
       </div>
     </BodyDiv>
-
-
   );
 };
 
 export default App;
-
-
 
 /**
    position: fixed;

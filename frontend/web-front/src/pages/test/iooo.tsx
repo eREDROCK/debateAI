@@ -14,12 +14,31 @@ import useSound from "use-sound";
 
 const BodyDiv = styled.div`
   position: fixed;
-  background-image: url("/image/BackGround.png"); // 背景画像の相対パスを指定
-  background-size: cover; // 画像をコンテナに合わせて拡大縮小
+  background: linear-gradient(200deg, #3e1d85 0%, #ff8a66 100%);
+  /* background-image: url("/image/BackGround.png"); // 背景画像の相対パスを指定 */
+  /* background-image: url("/image/TopBackGround.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover; // 画像をコンテナに合わせて拡大縮小 */
+
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
+
+  .bgimg {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    background-image: url("/image/TopBackGround.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+  }
 
   .bg {
     animation: slide 10s ease-in-out infinite alternate;
@@ -54,16 +73,16 @@ const BodyDiv = styled.div`
     display: flex;
     list-style: none;
     transform: translateY(10px);
-    justify-content: space-between;
+    justify-content: space-evenly;
     padding-inline-start: 0;
   }
   .AI {
-    width: 400px;
-    height: 400px;
+    max-width: 400px;
+    max-height: 400px;
   }
   .User {
-    width: 400px;
-    height: 400px;
+    max-width: 400px;
+    max-height: 400px;
     margin-right: 40px;
   }
 
@@ -129,90 +148,91 @@ const App = () => {
 
   return (
     <BodyDiv>
-      <div />
-      <ul className="Player">
-        <div>
-          <ForAgainstBox theme={formValues.title} flag={!formValues.flag} />
-          <li className="AI">
-            <PlayerAI
-              role={1}
-              isInputting={isInputting}
-              isLoading={isLoading}
-              defeatedState={formValues.defeatedstate}
-            />{" "}
-          </li>
-        </div>
-        <ChatScreen
-          onFormSubmit={onFormSubmit}
-          handleInput={handleInput}
-          handleInputBlur={handleInputBlur}
-          setIsLoading={setIsLoading}
-          isLoading={isLoading}
-        />
-        <div>
-          <ForAgainstBox theme={formValues.title} flag={formValues.flag} />
-          <li className="User">
-            <PlayerAI
-              role={0}
-              isInputting={isInputting}
-              isLoading={isLoading}
-              defeatedState={formValues.defeatedstate}
-            />{" "}
-          </li>
-        </div>
-      </ul>
-      <ThemeBox theme={formValues.title} flag={!formValues.flag} />
-      <ul className="AllAudi">
-        <ul className="AudiA">
-          <li>
-            <Audience
-              role={0}
-              isInputting={isInputting}
-              isLoading={isLoading}
-            />
-          </li>
-          <li>
-            <Audience
-              role={1}
-              isInputting={isInputting}
-              isLoading={isLoading}
-            />
-          </li>
-          <li>
-            <Audience
-              role={2}
-              isInputting={isInputting}
-              isLoading={isLoading}
-            />
-          </li>
+      <div className="bgimg">
+        <ul className="Player">
+          <div>
+            <ForAgainstBox theme={formValues.title} flag={!formValues.flag} />
+            <li className="AI">
+              <PlayerAI
+                role={1}
+                isInputting={isInputting}
+                isLoading={isLoading}
+                defeatedState={formValues.defeatedstate}
+              />{" "}
+            </li>
+          </div>
+          <ChatScreen
+            onFormSubmit={onFormSubmit}
+            handleInput={handleInput}
+            handleInputBlur={handleInputBlur}
+            setIsLoading={setIsLoading}
+            isLoading={isLoading}
+          />
+          <div>
+            <ForAgainstBox theme={formValues.title} flag={formValues.flag} />
+            <li className="User">
+              <PlayerAI
+                role={0}
+                isInputting={isInputting}
+                isLoading={isLoading}
+                defeatedState={formValues.defeatedstate}
+              />{" "}
+            </li>
+          </div>
         </ul>
-        <ul className="AudiB">
-          <li>
-            <Audience
-              role={0}
-              isInputting={isInputting}
-              isLoading={isLoading}
-            />
-          </li>
-          <li>
-            <Audience
-              role={1}
-              isInputting={isInputting}
-              isLoading={isLoading}
-            />
-          </li>
-          <li>
-            <Audience
-              role={2}
-              isInputting={isInputting}
-              isLoading={isLoading}
-            />
-          </li>
+        <ThemeBox theme={formValues.title} flag={!formValues.flag} />
+        <ul className="AllAudi">
+          <ul className="AudiA">
+            <li>
+              <Audience
+                role={0}
+                isInputting={isInputting}
+                isLoading={isLoading}
+              />
+            </li>
+            <li>
+              <Audience
+                role={1}
+                isInputting={isInputting}
+                isLoading={isLoading}
+              />
+            </li>
+            <li>
+              <Audience
+                role={2}
+                isInputting={isInputting}
+                isLoading={isLoading}
+              />
+            </li>
+          </ul>
+          <ul className="AudiB">
+            <li>
+              <Audience
+                role={0}
+                isInputting={isInputting}
+                isLoading={isLoading}
+              />
+            </li>
+            <li>
+              <Audience
+                role={1}
+                isInputting={isInputting}
+                isLoading={isLoading}
+              />
+            </li>
+            <li>
+              <Audience
+                role={2}
+                isInputting={isInputting}
+                isLoading={isLoading}
+              />
+            </li>
+          </ul>
         </ul>
-      </ul>
-      <div>
-        <button onClick={handlePlay}>Play Sound</button>
-        <button onClick={handleStop}>Stop Sound</button>
+        <div>
+          <button onClick={handlePlay}>Play Sound</button>
+          <button onClick={handleStop}>Stop Sound</button>
+        </div>
       </div>
     </BodyDiv>
   );

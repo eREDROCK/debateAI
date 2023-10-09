@@ -2,12 +2,13 @@ import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import Cookies from "js-cookie";
+import Image from "next/image";
 
 axios.defaults.withCredentials = true;
 
 const SendDiv = styled.div`
   .InputText {
-    width: 600px;
+    width: 90%;
     height: 50px;
     bottom: 10px;
     border-radius: 16px;
@@ -15,6 +16,36 @@ const SendDiv = styled.div`
     font-size: 20px;
     z-index: 2;
   }
+  button {
+    display: flex; /* コンテンツを中央に配置するために flex レイアウトを使用 */
+    align-items: center; /* 垂直方向の中央寄せ */
+    justify-content: space-between; /* 水平方向の中央寄せ */
+    background-color: transparent; /* 背景を透明に */
+    border: none; /* ボーダーをなしに */
+    padding: 0; /* パディングを0に */
+    width: 35px; /* 画像の幅を指定 */
+    height: auto; /* 高さを自動調整（アスペクト比を保持） */
+  }
+  button:hover {
+    background-color: rgba(0, 0, 0, 0.053); /* ホバー時の背景色 */
+    transition: background-color 0.5s ease; /* ホバー時に背景色をゆっくり変化させる */
+    border-radius: 16px;
+    width: 40px; /* 画像の幅を指定 */
+    height: auto; /* 高さを自動調整（アスペクト比を保持） */
+  }
+  button:active {
+    background-color: rgba(0, 0, 0, 0.37); /* 押したときの背景色を設定 */
+    width: 35px; /* 画像の幅を指定 */
+    height: auto; /* 高さを自動調整（アスペクト比を保持） */
+  }
+  input {
+    margin-right: 10px; /* input 右側の余白 */
+  }
+`;
+
+const Container = styled.div`
+  display: flex; /* Flexコンテナを作成 */
+  align-items: center; /* 垂直方向に中央寄せ */
 `;
 
 function SendText({
@@ -25,10 +56,9 @@ function SendText({
   handleInputBlur,
   setCheckJudgeGame,
 }) {
-  const [text, setText] = useState("");
   const initialValues = {
     message: [{ role: "user", content: "" }],
-    title: "たけのこの里よりもきのこの山のほうが美味しい",
+    title: "",
     flag: true,
   };
 
@@ -36,15 +66,26 @@ function SendText({
   const [count, setCount] = useState(0);
   const [formValues, setFormValues] = useState(initialValues);
   const [formStartValues, setFormStartValues] = useState({ title: "" });
-  const [messageValues, setMessageFromValues] = useState(initialValues);
   const [checkResult, setCheckResult] = useState(false);
   const [checkStart, setCheckStartResult] = useState(false);
+  const [isLoadingNow, setIsLoadingNow] = useState(false);
 
   const formRef = useRef(null);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    // 入力内容を取得
+    const inputValue =
+      formValues.message[formValues.message.length - 1].content;
+
+    // 入力内容が空であれば送信を中止
+    if (!inputValue.trim() || isLoadingNow) {
+      return; // フォーム送信を中止
+    }
+
     setIsLoading(true);
+    setIsLoadingNow(true);
     const csrfToken = Cookies.get("csrftoken");
 
     onTextSubmit(formValues.message[formValues.message.length - 1]);
@@ -89,6 +130,7 @@ function SendText({
         );
         onFormSubmit(response.data);
         setIsLoading(false);
+        setIsLoadingNow(false);
       })
       .catch((error) => {
         // console.log("error.response.data");
@@ -184,6 +226,13 @@ function SendText({
   const handleGameStart = async (e: React.FormEvent<HTMLFormElement>) => {
     const csrfToken = Cookies.get("csrftoken");
     e.preventDefault();
+
+    const inputValue = formStartValues.title;
+    // 入力内容が空であれば送信を中止
+    if (!inputValue.trim()) {
+      return; // フォーム送信を中止
+    }
+
     if (
       formStartValues.title === "ランダム" ||
       formStartValues.title === "random"
@@ -228,29 +277,51 @@ function SendText({
     <SendDiv>
       {checkStart ? (
         <form onSubmit={(e) => handleSubmit(e)} ref={formRef}>
-          <input
-            className="InputText"
-            type="text"
-            placeholder="入力"
-            name="message"
-            onChange={(e) => handleChanged(e)}
-            // onFocus={handleInput} // formに入力中の時にhandleInputを呼び出す
-            // onBlur={handleInputBlur} // formに入力も何もしていないときにhandleInputBlurを呼び出す
-          />
-          <button>送信</button>
+          <Container>
+            <input
+              className="InputText"
+              type="text"
+              placeholder="入力"
+              name="message"
+              onChange={(e) => handleChanged(e)}
+              // onFocus={handleInput} // formに入力中の時にhandleInputを呼び出す
+              // onBlur={handleInputBlur} // formに入力も何もしていないときにhandleInputBlurを呼び出す
+            />
+            <button>
+              <Image
+                src="/image/紙飛行機アイコン.png"
+                layout="responsive"
+                //   sizes="20%"
+                alt="none"
+                width={20}
+                height={20}
+              />
+            </button>
+          </Container>
         </form>
       ) : (
         <form onSubmit={(e) => handleGameStart(e)} ref={formRef}>
-          <input
-            className="InputText"
-            type="text"
-            placeholder="タイトルを入力"
-            name="title"
-            onChange={(e) => handleStartChanged(e)}
-            // onFocus={handleInput} // formに入力中の時にhandleInputを呼び出す
-            // onBlur={handleInputBlur} // formに入力も何もしていないときにhandleInputBlurを呼び出す
-          />
-          <button>送信</button>
+          <Container>
+            <input
+              className="InputText"
+              type="text"
+              placeholder="タイトルを入力"
+              name="title"
+              onChange={(e) => handleStartChanged(e)}
+              // onFocus={handleInput} // formに入力中の時にhandleInputを呼び出す
+              // onBlur={handleInputBlur} // formに入力も何もしていないときにhandleInputBlurを呼び出す
+            />
+            <button>
+              <Image
+                src="/image/紙飛行機アイコン.png"
+                layout="responsive"
+                //   sizes="15%"
+                alt="none"
+                width={20}
+                height={20}
+              />
+            </button>
+          </Container>
         </form>
       )}
     </SendDiv>

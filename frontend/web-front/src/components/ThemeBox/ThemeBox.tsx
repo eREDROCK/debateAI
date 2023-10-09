@@ -29,15 +29,25 @@ const BoxDiv = styled.div`
     list-style: none;
     padding: 0px 0px 0px 0px;
   }
+
+  @media screen and (max-width: 390px) {
+    .title {
+      font-size: 30px;
+      font-family: "游ゴシック";
+      color: #ffffff;
+
+      list-style: none;
+      padding: 0px 0px 0px 0px;
+    }
+  }
 `;
 
 // テーマと賛成反対を表示するコンポーネント
 const ThemeBox = (props: { theme; flag }) => {
   return (
     <BoxDiv>
-      <li className="title">お題</li>
       {props.theme === "お題" ? (
-        <></>
+        <li className="title">お題</li>
       ) : (
         <li className="title">{props.theme}</li>
       )}

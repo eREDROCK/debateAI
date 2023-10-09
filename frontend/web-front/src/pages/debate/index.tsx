@@ -1,212 +1,240 @@
-import React, { useState, useRef } from "react";
-import styled from "styled-components";
+import React, { useState, useEffect, useRef } from "react";
+import styled, { keyframes } from "styled-components";
+import Audience from "../../components/Audience/Audience";
+import Cylinder from "../../components/Cylinder/Cylinder";
+import PlayerAI from "../../components/Player-AI-box/Player-AI-box";
+import ThemeBox from "../../components/ThemeBox/ThemeBox";
+import ForAgainstBox from "../../components/ForAgainstBox/ForAgainstBox";
+import ChatScreen from "../../components/Chat-Screen/ChatScreen";
 import axios from "axios";
+import Image from "next/image";
+import useSound from "use-sound";
 
-const StyledHello = styled.div`
-  color: red;
-  span {
-    color: blue;
+//rolo{1} Ai 左　{2}ユーザ　右
+
+const BodyDiv = styled.div`
+  position: fixed;
+  background: linear-gradient(200deg, #3e1d85 0%, #ff8a66 100%);
+  /* background-image: url("/image/BackGround.png"); // 背景画像の相対パスを指定 */
+  /* background-image: url("/image/TopBackGround.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover; // 画像をコンテナに合わせて拡大縮小 */
+
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  .bgimg {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    background-image: url("/image/TopBackGround.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
   }
 
-  @media (min-width: 768px) {
-    span {
-      display: block;
+  .bg {
+    animation: slide 10s ease-in-out infinite alternate;
+    background: linear-gradient(-90deg, #aa0000 50%, #0000aa 50%);
+    bottom: 0;
+    left: -50%;
+    position: fixed;
+    right: -50%;
+    top: 0;
+    z-index: -1;
+  }
+
+  .bg2 {
+    /*  animation-direction:alternate-reverse;
+        animation-duration:4s;*/
+  }
+
+  .bg3 {
+    /*animation-duration:5s;*/
+  }
+
+  @keyframes slide {
+    0% {
+      transform: translateX(-25%);
     }
+    100% {
+      transform: translateX(25%);
+    }
+  }
+
+  .Player {
+    display: flex;
+    list-style: none;
+    transform: translateY(10px);
+    justify-content: space-evenly;
+    padding-inline-start: 0;
+  }
+  .AI {
+    max-width: 400px;
+    max-height: 400px;
+  }
+  .User {
+    max-width: 400px;
+    max-height: 400px;
+    margin-right: 40px;
+  }
+
+  .AllAudi {
+    display: flex;
+    transform: translateY(0px);
+  }
+  .AudiA {
+    display: flex;
+    list-style: none;
+    justify-content: space-between;
+    padding-inline-start: 0;
+    width: 60%;
+  }
+  .AudiB {
+    display: flex;
+    list-style: none;
+    justify-content: space-between;
+    padding-inline-start: 0;
+    width: 60%;
   }
 `;
 
 const App = () => {
   const initialValues = {
     message: [{ role: "user", content: "" }],
-    title: "たけのこの里よりもきのこの山のほうが美味しい",
+    title: "お題",
     flag: true,
+    defeatedstate: false,
   };
 
-  // APIにリクエストした回数をカウントする
-  const [count, setCount] = useState(0);
-  const [formValues, setFormValues] = useState(initialValues);
-  const [formStartValues, setFormStartValues] = useState({ title: "" });
-  const [messageValues, setMessageFromValues] = useState(initialValues);
-  const [checkResult, setCheckResult] = useState(false);
-  const [checkStart, setCheckStartResult] = useState(false);
+  const [formValues, setFromValues] = useState(initialValues);
+  const [isInputting, setIsInputting] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  var defeatedSate = false;
 
-  const formRef = useRef(null);
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    await axios
-      .post(
-        "http://localhost:8080/api/debate/",
-        {
-          message: formValues.message,
-          title: formValues.title,
-          flag: formValues.flag,
-        },
-        {
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        }
-      )
-      .then((response) => {
-        console.log("body:", response.status);
-        setCount(count + 1);
-        console.log(count);
-        setFormValues(response.data);
-        const newMessage = { role: "user", content: "" };
-        setFormValues((prevFormValues) => ({
-          ...prevFormValues,
-          message: [...prevFormValues.message, newMessage], // 新しいメッセージを追加
-        }));
-        console.log(response.data);
-        if (count >= 3) {
-          setCheckResult(true);
-          handleJudgeSubmit();
-        }
-      })
-      .catch((error) => {
-        // console.log("error.response.data");
-      });
-    formRef.current.reset();
+  const [play, { stop }] = useSound("/sound/Electric_Shine.mp3", {
+    volume: 0.3,
+    loop: true,
+  });
+  const handlePlay = () => {
+    console.log("bgm play");
+    play();
+  };
+  const handleStop = () => {
+    stop();
   };
 
-  const handleJudgeSubmit = async () => {
-    await axios
-      .post(
-        "http://localhost:8080/api/judge/",
-        {
-          message: formValues.message,
-          title: formValues.title,
-          flag: formValues.flag,
-        },
-        {
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        }
-      )
-      .then((response) => {
-        console.log("body:", response.data);
-
-        setFormValues((prevFormValues) => ({
-          ...prevFormValues,
-          message: [
-            ...prevFormValues.message,
-            { role: "assistant", content: "勝者：" + response.data["winner"] },
-          ], // 新しいメッセージを追加
-        }));
-
-        setFormValues((prevFormValues) => ({
-          ...prevFormValues,
-          message: [
-            ...prevFormValues.message,
-            { role: "assistant", content: response.data["comment"] },
-          ], // 新しいメッセージを追加
-        }));
-      })
-      .catch((error) => {
-        // console.log("error.response.data");
-      });
+  const onFormSubmit = (message) => {
+    //お題，賛成派の変数受け取り
+    setFromValues(message);
+    defeatedSate = message.defeatedstate;
   };
 
-  const handleChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // console.log(e.target);
-    const { name, value } = e.target;
-    const newMessage = { role: "user", content: value };
-
-    setFormValues((prevFormValues) => {
-      const updatedMessages = [...prevFormValues.message]; // 既存のメッセージをコピー
-      const lastMessageIndex = updatedMessages.length - 1;
-
-      // 最後のメッセージの content を更新
-      updatedMessages[lastMessageIndex].content = value;
-
-      return {
-        ...prevFormValues,
-        message: updatedMessages, // 更新されたメッセージをセット
-      };
-    });
-    console.log(formValues);
+  const handleInput = () => {
+    setIsInputting(true);
+    // console.log("inputting", bool);
   };
-
-  const handleStartChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // console.log(e.target);
-    const { name, value } = e.target;
-    setFormStartValues({ ...formStartValues, [name]: value });
-
-    console.log("formStartValues :", formStartValues);
-  };
-
-  const handleGameStart = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (
-      formStartValues.title === "ランダム" ||
-      formStartValues.title === "random"
-    ) {
-      await axios
-        .get("http://localhost:8080/api/randomtheme/", {
-          withCredentials: true,
-        })
-        .then((response) => {
-          console.log("body:", response.data);
-          setFormValues({
-            ...formValues,
-            title: response.data["title"],
-          });
-          setCheckStartResult(true);
-        })
-        .catch((error) => {
-          console.log(error.response);
-        });
-    } else {
-      setFormValues({
-        ...formValues,
-        title: formValues["title"],
-      });
-      setCheckStartResult(true);
-    }
-    console.log("formValues", formValues);
-    formRef.current.reset();
+  // formに入力も何もしていないときに呼び出す関数
+  const handleInputBlur = () => {
+    setIsInputting(false);
   };
 
   return (
-    <div>
-      <StyledHello>debate</StyledHello>
-      {checkStart ? (
-        <form onSubmit={(e) => handleSubmit(e)} ref={formRef}>
-          <input
-            type="text"
-            placeholder="入力"
-            name="message"
-            onChange={(e) => handleChanged(e)}
+    <BodyDiv>
+      <div className="bgimg">
+        <ul className="Player">
+          <div>
+            <ForAgainstBox theme={formValues.title} flag={!formValues.flag} />
+            <li className="AI">
+              <PlayerAI
+                role={1}
+                isInputting={isInputting}
+                isLoading={isLoading}
+                defeatedState={formValues.defeatedstate}
+              />{" "}
+            </li>
+          </div>
+          <ChatScreen
+            onFormSubmit={onFormSubmit}
+            handleInput={handleInput}
+            handleInputBlur={handleInputBlur}
+            setIsLoading={setIsLoading}
+            isLoading={isLoading}
           />
-          <button>送信</button>
-        </form>
-      ) : (
-        <form onSubmit={(e) => handleGameStart(e)} ref={formRef}>
-          <input
-            type="text"
-            placeholder="タイトルを入力"
-            name="title"
-            onChange={(e) => handleStartChanged(e)}
-          />
-          <button>送信</button>
-        </form>
-      )}
-
-      {formValues.message.length < 2
-        ? formValues.message[formValues.message.length - 1].content
-        : formValues.message[formValues.message.length - 2].content}
-      {checkResult ? (
-        <p>{formValues.message[formValues.message.length - 1].content}</p>
-      ) : (
-        <></>
-      )}
-    </div>
+          <div>
+            <ForAgainstBox theme={formValues.title} flag={formValues.flag} />
+            <li className="User">
+              <PlayerAI
+                role={0}
+                isInputting={isInputting}
+                isLoading={isLoading}
+                defeatedState={formValues.defeatedstate}
+              />{" "}
+            </li>
+          </div>
+        </ul>
+        <ThemeBox theme={formValues.title} flag={!formValues.flag} />
+        <ul className="AllAudi">
+          <ul className="AudiA">
+            <li>
+              <Audience
+                role={0}
+                isInputting={isInputting}
+                isLoading={isLoading}
+              />
+            </li>
+            <li>
+              <Audience
+                role={1}
+                isInputting={isInputting}
+                isLoading={isLoading}
+              />
+            </li>
+            <li>
+              <Audience
+                role={2}
+                isInputting={isInputting}
+                isLoading={isLoading}
+              />
+            </li>
+          </ul>
+          <ul className="AudiB">
+            <li>
+              <Audience
+                role={0}
+                isInputting={isInputting}
+                isLoading={isLoading}
+              />
+            </li>
+            <li>
+              <Audience
+                role={1}
+                isInputting={isInputting}
+                isLoading={isLoading}
+              />
+            </li>
+            <li>
+              <Audience
+                role={2}
+                isInputting={isInputting}
+                isLoading={isLoading}
+              />
+            </li>
+          </ul>
+        </ul>
+        <div>
+          <button onClick={handlePlay}>Play Sound</button>
+          <button onClick={handleStop}>Stop Sound</button>
+        </div>
+      </div>
+    </BodyDiv>
   );
 };
 

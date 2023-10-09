@@ -3,6 +3,12 @@ import styled from "styled-components";
 import SendText from "./SendText";
 import UserName from "../Username-box/UserNameBox";
 
+const AllDiv = styled.div`
+  /* position: fixed; */
+  display: inline-flexbox;
+  min-width: 500px;
+`;
+
 const OutLineDiv = styled.div`
   /* position: fixed; */
   display: flex;
@@ -131,26 +137,11 @@ const BodyDiv = styled.div`
     max-width: 80%;
     border-radius: 12px;
     background: rgba(97, 63, 246, 0.8);
-    font-size: 15px;
+    font-size: 24px;
     text-align: left;
     justify-content: flex-start;
     white-space: normal; /* または break-spaces */
     word-wrap: break-word;
-  }
-
-  .txts .TextAnime {
-    display: flex;
-    overflow: hidden;
-    white-space: nowrap;
-    animation: txtanime 2s steps(15, end) forwards;
-  }
-  @keyframes txtanime {
-    0% {
-      width: 0%;
-    }
-    100% {
-      width: 100%;
-    }
   }
 
   .txts_r p {
@@ -161,7 +152,7 @@ const BodyDiv = styled.div`
     max-width: 80%;
     border-radius: 12px;
     background: rgba(241, 74, 74, 0.8);
-    font-size: 15px;
+    font-size: 24px;
     text-align: left;
     justify-content: flex-end;
   }
@@ -205,41 +196,21 @@ function ChatScreen({
   };
 
   const [texts, setTexts] = useState([]);
-  const [names, setNames] = useState([]);
+  //   const [names, setNames] = useState([]);
   const [formValues, setFormValues] = useState(initialValues);
-  const [count, setCount] = useState(0);
   const [checkStartGame, setCheckStartGame] = useState(true); //ゲームが一番最初に開始したかチェックする開始
   const [checkJudgeGame, setCheckJudgeGame] = useState(false); //ゲームが一番最初に開始したかチェックする開始
-
-  const increment = () => {
-    setCount(count + 1);
-  };
-  //  onFormSubmit(formValues);
+  //   const [animationCompleteCheck, setAnimationCompleteCheck] = useState(false);
+  //   onFormSubmit(formValues);
 
   useEffect(() => {
     setTexts([]);
-    setNames([]);
+    // setNames([]);
   }, []);
 
-  //   const onTextSubmit = (newText) => {
-  //     setTexts((prevTexts) => [...prevTexts, newText]);
-  //     console.log(texts);
-  //     increment();
-  //   };
-
-  const [newMessageAnimation, setNewMessageAnimation] = useState(false); // 新しいメッセージのアニメーションステート
-
   const onTextSubmit = (newText) => {
-    // 新しいメッセージが送信されたときにアニメーションをトリガー
-    setNewMessageAnimation(true);
-
     // メッセージを追加
     setTexts((prevTexts) => [...prevTexts, newText]);
-
-    // // アニメーションが完了したらアニメーションステートをリセット
-    // setTimeout(() => {
-    //   setNewMessageAnimation(false);
-    // }, 2000); // 2秒後にリセット（アニメーションの時間に合わせて調整してください）
   };
 
   const scrollToBottom = () => {
@@ -257,6 +228,7 @@ function ChatScreen({
     const [displayText, setDisplayText] = useState("");
     const [currentIndex, setCurrentIndex] = useState(0);
     const [animationComplete, setAnimationComplete] = useState(false);
+    // setAnimationCompleteCheck(false);
 
     useEffect(() => {
       if (animationComplete) {
@@ -275,8 +247,9 @@ function ChatScreen({
         } else {
           clearInterval(typingInterval);
           setAnimationComplete(true); // アニメーションが完了したことをマーク
+          //   setAnimationCompleteCheck(true);
         }
-      }, 100); // 100ミリ秒ごとに1文字ずつ表示
+      }, 80); // 100ミリ秒ごとに1文字ずつ表示
 
       return () => {
         clearInterval(typingInterval);
@@ -293,7 +266,7 @@ function ChatScreen({
       onTextSubmit({
         role: "assistant",
         content:
-          "DaBぇるへようこそ！ディベートをする前にまず最初にお題を決めましょう！　お題は自由に決めることができます。また、「ランダム」と入力すると自動でお題を決めることができます。お題を決めたらあなたは肯定派として意見をしてください。それではディベートを始めましょう!",
+          "DaBぇるへようこそ! ディベートをする前にまず最初にお題を決めましょう。 お題は自由に決めることができます。また、「ランダム」と入力すると自動でお題を決めることができます。お題を決めたらあなたは肯定派として意見をしてください。それではディベートを始めましょう!",
       });
 
       setCheckStartGame(false); // ゲームが開始されたことをマーク
@@ -315,7 +288,7 @@ function ChatScreen({
   }, [checkJudgeGame]);
 
   return (
-    <div>
+    <AllDiv>
       <OutLineDiv>
         <BodyDiv>
           <div className="styledtxts">
@@ -361,7 +334,7 @@ function ChatScreen({
         onFormSubmit={onFormSubmit}
         setCheckJudgeGame={setCheckJudgeGame}
       />
-    </div>
+    </AllDiv>
   );
 }
 
