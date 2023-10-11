@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  labels:
+    app: backend
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: python-backend
+          image: gcr.io/debateai-401304/python-backend:latest
+          imagePullPolicy: Always
+          command: ["gunicorn", "-b", ":8000", "config.wsgi"]
+          ports:
+            - containerPort: 8000
+        - name: nginx-back
+          image: gcr.io/debateai-401304/nginx_back:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          # readinessProbe:
+          #   httpGet:
+          #     path: /healthz
+          #     port: 80
+          #   initialDelaySeconds: 5
+          #   periodSeconds: 5
+          

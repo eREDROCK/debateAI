@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  labels:
+    name: frontend
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: web-front
+        image: gcr.io/debateai-401304/web-front:latest
+        imagePullPolicy: Always
+        command: [bash, -c, yarn upgrade --no-progress --network-timeout 1000000 && yarn run dev]
+        ports:
+         - containerPort: 3000
+         
+      - name: nginx-frontend
+        image: gcr.io/debateai-401304/nginx_frontend:latest
+        imagePullPolicy: Always
+        ports:
+         - containerPort: 80
+
+        # readinessProbe:
+        #   httpGet:
+        #     path: /healthz
+        #     port: 80
+        #   initialDelaySeconds: 300
+        #   periodSeconds: 15
+        #   successThreshold: 1
+        #   failureThreshold: 20
+
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 80
+          failureThreshold: 30
+          successThreshold: 1
+          periodSeconds: 5
+
+        startupProbe:
+          httpGet:
+            path: /healthz
+            port: 80
+          initialDelaySeconds: 300
+          successThreshold: 1
+          failureThreshold: 30
+          periodSeconds: 15
