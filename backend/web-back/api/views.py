@@ -86,3 +86,11 @@ class JudgeAPI(APIView):
        "comment": comment
     }
     return JsonResponse(response)
+  
+class DefeatJudge(APIView):
+    permission_classes = ()
+    authentication_classes = ()
+
+    def post(self, request):
+       messages=request.data["message"]
+       pass
