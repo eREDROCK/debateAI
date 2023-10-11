@@ -142,8 +142,22 @@ CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOW_ALL_ORIGINS = True
 
+#許可するヘッダーを指定する
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+]
+
 CORS_ORIGIN_WHITELIST = (
     'http://localhost',
     'http://localhost:3000',
     'http://localhost:3000/debate',
+    'http://localhost:3000/test/io',
 )
