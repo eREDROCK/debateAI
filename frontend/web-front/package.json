@@ -19,8 +19,8 @@
   },
   "scripts": {
     "dev": "next dev",
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "next start",
+    "build": "next build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

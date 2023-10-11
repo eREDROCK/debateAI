@@ -149,6 +149,10 @@ const App = () => {
   return (
     <BodyDiv>
       <div className="bgimg">
+        <div>
+          <button onClick={handlePlay}>Play Sound</button>
+          <button onClick={handleStop}>Stop Sound</button>
+        </div>
         <ul className="Player">
           <div>
             <ForAgainstBox theme={formValues.title} flag={!formValues.flag} />
@@ -229,10 +233,6 @@ const App = () => {
             </li>
           </ul>
         </ul>
-        <div>
-          <button onClick={handlePlay}>Play Sound</button>
-          <button onClick={handleStop}>Stop Sound</button>
-        </div>
       </div>
     </BodyDiv>
   );
