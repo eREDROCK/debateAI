@@ -1,24 +1,27 @@
-# Dockerfile for web-front
+FROM node AS builder
 
-# Use an official Node.js runtime as a parent image
-FROM node:latest
+WORKDIR /app
 
-# Set the working directory in the container
-WORKDIR /home/app/frontend
+# 匿名での情報収集を拒否する設定
+ENV NEXT_TELEMETRY_DISABLED 1 
+COPY . .
 
-# # Copy package.json and package-lock.json to the container
-COPY package.json package-lock.json ./
+# npmなら, RUN npm ci
+RUN yarn install --frozen-lockfile 
+# npmなら, RUN npm run build
+RUN yarn build 
 
-# # Install Node.js dependencies
-# RUN npm install
+FROM node as runner
 
-# Copy the rest of the client code to the container
-COPY . ./
+ENV NODE_ENV production
+ENV NEXT_TELEMETRY_DISABLED 1
 
-# # Build the Next.js application
-# RUN npm run build
-
-# # Remove the EXPOSE statement, as it's not needed
-
-# # Command to start the application
-# CMD ["npm", "start"]
+# 初期設定のままであれば不要
+COPY --from=builder /app/next.config.js next.config.js 
+COPY --from=builder /app/.next .next
+# COPY --from=builder /app/.env .env 
+COPY --from=builder /app/public public
+COPY --from=builder /app/node_modules node_modules
+COPY --from=builder /app/package.json package.json
+# npmなら, package-lock.json
+COPY --from=builder /app/yarn.lock yarn.lock 

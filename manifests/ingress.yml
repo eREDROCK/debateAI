@@ -3,9 +3,11 @@ kind: Ingress
 metadata:
   name: ingress-service
   namespace: default
-  annotations:
-    kubernetes.io/ingress.class: "gce"
+  annotations: # 追加
+    # kubernetes.io/ingress.class: gce
+    kubernetes.io/ingress.global-static-ip-name: 127.0.0.1 # 追加
 spec:
+  ingressClassName: "nginx" #localでingressを使う場合
   rules:
     - http:
         paths:
@@ -23,10 +25,17 @@ spec:
                 name: backend-node-service
                 port:
                   number: 80
-          - path: /admin/
-            pathType: Prefix
-            backend:
-              service:
-                name: backend-node-service
-                port:
-                  number: 80
+          # - path: /api/randomtheme
+          #   pathType: Prefix
+          #   backend:
+          #     service:
+          #       name: backend-node-service
+          #       port:
+          #         number: 80
+          # - path: /api/judge
+          #   pathType: Prefix
+          #   backend:
+          #     service:
+          #       name: backend-node-service
+          #       port:
+          #         number: 80

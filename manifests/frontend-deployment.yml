@@ -5,7 +5,7 @@ metadata:
   labels:
     name: frontend
 spec:
-  replicas: 0
+  replicas: 2
   selector:
     matchLabels:
       app: frontend
@@ -15,41 +15,64 @@ spec:
         app: frontend
     spec:
       containers:
-      - name: web-front
-        image: gcr.io/debateai-401304/web-front:latest
-        imagePullPolicy: Always
-        command: [bash, -c, yarn upgrade --no-progress --network-timeout 1000000 && yarn run dev]
-        ports:
-         - containerPort: 3000
-         
-      - name: nginx-frontend
-        image: gcr.io/debateai-401304/nginx_frontend:latest
-        imagePullPolicy: Always
-        ports:
-         - containerPort: 80
+        - name: web-front
+          # image: gcr.io/debateai-401304/web-front:latest
+          image: debateai-web-front:latest
+          imagePullPolicy: IfNotPresent
+          # imagePullPolicy: Always
+          command:
+            [
+              bash,
+              -c,
+              yarn upgrade --no-progress --network-timeout 1000000 && yarn run start,
+            ]
+          ports:
+            - containerPort: 3000
+          resources:
+            limits:
+              cpu: "1" # CPU制限 (1コア)
+              memory: "1G" # メモリ制限 (1G)
+            requests:
+              cpu: "0.2" # CPUリクエスト (0.2コア)
+              memory: "256Mi" # メモリリクエスト (256 MiB)
 
-        # readinessProbe:
-        #   httpGet:
-        #     path: /healthz
-        #     port: 80
-        #   initialDelaySeconds: 300
-        #   periodSeconds: 15
-        #   successThreshold: 1
-        #   failureThreshold: 20
+        - name: nginx-frontend
+          # image: gcr.io/debateai-401304/nginx_frontend:latest
+          image: debateai-frontend-server:latest
+          imagePullPolicy: IfNotPresent
+          # imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          resources:
+            limits:
+              cpu: "1" # CPU制限 (1コア)
+              memory: "1G" # メモリ制限 (1G)
+            requests:
+              cpu: "0.1" # CPUリクエスト (0.1コア)
+              memory: "128Mi" # メモリリクエスト (128 MiB)
 
-        livenessProbe:
-          httpGet:
-            path: /healthz
-            port: 80
-          failureThreshold: 30
-          successThreshold: 1
-          periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 80
+            initialDelaySeconds: 300
+            periodSeconds: 15
+            successThreshold: 1
+            failureThreshold: 20
 
-        startupProbe:
-          httpGet:
-            path: /healthz
-            port: 80
-          initialDelaySeconds: 300
-          successThreshold: 1
-          failureThreshold: 30
-          periodSeconds: 15
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 80
+            failureThreshold: 30
+            successThreshold: 1
+            periodSeconds: 5
+
+          startupProbe:
+            httpGet:
+              path: /healthz
+              port: 80
+            initialDelaySeconds: 300
+            successThreshold: 1
+            failureThreshold: 30
+            periodSeconds: 15

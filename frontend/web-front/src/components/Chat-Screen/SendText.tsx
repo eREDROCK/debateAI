@@ -94,7 +94,8 @@ function SendText({
 
     await axios
       .post(
-        "http://localhost:8080/api/debate/",
+        // "http://localhost:8080/api/debate/",
+        "http://localhost:80/api/debate/",
         {
           message: formValues.message,
           title: formValues.title,
@@ -143,7 +144,8 @@ function SendText({
     setCheckJudgeGame(true); //ジャッジ中
     await axios
       .post(
-        "http://localhost:8080/api/judge/",
+        // "http://localhost:8080/api/judge/",
+        "http://localhost:80/api/judge/",
         {
           message: formValues.message,
           title: formValues.title,
@@ -238,9 +240,13 @@ function SendText({
       formStartValues.title === "random"
     ) {
       await axios
-        .get("http://localhost:8080/api/randomtheme/", {
-          withCredentials: true,
-        })
+        .get(
+          // "http://localhost:8080/api/randomtheme/",
+          "http://localhost:80/api/randomtheme/",
+          {
+            withCredentials: true,
+          }
+        )
         .then((response) => {
           console.log("body:", response.data);
           setFormValues({
