@@ -14,24 +14,26 @@ spec:
       labels:
         app: frontend
     spec:
+      restartPolicy: Always
       containers:
         - name: web-front
           # image: gcr.io/debateai-401304/web-front:latest
           image: debateai-web-front:latest
           imagePullPolicy: IfNotPresent
           # imagePullPolicy: Always
-          command:
-            [
-              bash,
-              -c,
-              yarn upgrade --no-progress --network-timeout 1000000 && yarn run start,
-            ]
+          # command:
+          #   [
+          #     bash,
+          #     -c,
+          #     yarn upgrade --no-progress --network-timeout 1000000 && yarn start,
+          #   ]
+          command: [bash, -c, yarn start]
           ports:
             - containerPort: 3000
           resources:
             limits:
-              cpu: "1" # CPU制限 (1コア)
-              memory: "1G" # メモリ制限 (1G)
+              cpu: "1.5" # CPU制限 (1コア)
+              memory: "2Gi" # メモリ制限 (2G)
             requests:
               cpu: "0.2" # CPUリクエスト (0.2コア)
               memory: "256Mi" # メモリリクエスト (256 MiB)
@@ -51,14 +53,14 @@ spec:
               cpu: "0.1" # CPUリクエスト (0.1コア)
               memory: "128Mi" # メモリリクエスト (128 MiB)
 
-          readinessProbe:
-            httpGet:
-              path: /healthz
-              port: 80
-            initialDelaySeconds: 300
-            periodSeconds: 15
-            successThreshold: 1
-            failureThreshold: 20
+          # readinessProbe:
+          #   httpGet:
+          #     path: /healthz
+          #     port: 80
+          #   initialDelaySeconds: 300
+          #   periodSeconds: 15
+          #   successThreshold: 1
+          #   failureThreshold: 20
 
           livenessProbe:
             httpGet:
@@ -66,13 +68,13 @@ spec:
               port: 80
             failureThreshold: 30
             successThreshold: 1
-            periodSeconds: 5
+            periodSeconds: 15
 
           startupProbe:
             httpGet:
               path: /healthz
               port: 80
-            initialDelaySeconds: 300
+            initialDelaySeconds: 30
             successThreshold: 1
             failureThreshold: 30
             periodSeconds: 15
